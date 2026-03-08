@@ -3,17 +3,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import dbConnect from './config/dbConnect.js'
+import authRouter from './modules/Auth/routes/authRoute.js';
 dbConnect();
 
 const app = express();
 app.use(express.json());
 const port = process.env.PORT || 8080;
-import authRouter from './modules/Auth/routes/authRoute.js';
 
-// app.use('/' , (req, res)=>{
-//     res.send("Working server");
-// });
 
+//Routes
 app.use('/api/auth', authRouter);
 
 
