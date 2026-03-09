@@ -35,7 +35,7 @@ export default register;
 
 export const login = async(req, res) => {
     try {
-        const {username, email, password } = req.body;
+        const {identifier, password } = req.body;
         const user = await User.findOne({
             $or: [
                 { email: identifier },
