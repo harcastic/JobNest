@@ -7,7 +7,7 @@ const registerSchema = Joi.object({
         .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"))
         .message("Password must contain uppercase, lowercase, number, special character and be at least 8 characters long")
         .required(),
-    role : Joi.string().valid("admin", "user").required(),
+    role : Joi.string().valid("admin", "recruiter", "user").required(),
     bio : Joi.string().optional(),
     skills : Joi.array().items(Joi.string()).optional(),
     experienceLevel : Joi.string().optional(),

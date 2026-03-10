@@ -1,5 +1,6 @@
 const roleHierarchy = {
-    admin : 2,
+    admin : 3,
+    recruiter : 2,
     user : 1
 };
 
