@@ -17,9 +17,33 @@ const userSchema = mongoose.Schema({
     },
     role : {
         type : String,
-        requied : true,
+        required : true,
         enum : ["admin", "user"],
         default :"user"
+    },
+    bio : {
+        type : String,
+        default : ""
+    },
+    skills : [
+        {
+            type : [String],
+            default : [] 
+        }
+    ],
+    experienceLevel : {
+        type : String
+    },
+    location : {
+        type : String,
+        default : ""
+    },
+    profileImage : {
+        type : String,
+        default : ""
+    },
+    resume :{
+        type : String
     }
 },
     {

@@ -4,6 +4,7 @@ dotenv.config();
 
 import dbConnect from './config/dbConnect.js'
 import authRouter from './modules/Auth/routes/authRoute.js';
+import userRouter from './modules/User/routes/usersRoute.js';
 dbConnect();
 
 const app = express();
@@ -13,6 +14,7 @@ const port = process.env.PORT || 8080;
 
 //Routes
 app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 
 app.listen(port , () =>{
