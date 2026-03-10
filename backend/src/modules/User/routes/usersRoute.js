@@ -10,4 +10,6 @@ router.get('/profile', validateToken, getProfile);
 router.put('/profile', validateToken, updateProfile);
 router.delete('/profile', validateToken, deleteProfile);
 
+// 
+
 export default router;

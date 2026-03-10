@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema({
     role : {
         type : String,
         required : true,
-        enum : ["admin", "user"],
+        enum : ["admin", "recruiter" ,"user"], // Admin to manage platfrom  // Recruiter - posting Jobs  // User - Job seekers
         default :"user"
     },
     bio : {
