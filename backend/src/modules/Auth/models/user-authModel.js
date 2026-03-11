@@ -44,6 +44,14 @@ const userSchema = mongoose.Schema({
     },
     resume :{
         type : String
+    },
+    companyName : {
+        type : String,
+        default : ""
+    },
+    isVerifiedRecruiter :{
+        type : Boolean,
+        default : false
     }
 },
     {
