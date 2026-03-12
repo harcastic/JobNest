@@ -6,7 +6,7 @@ const updateProfile = async (req, res) =>{
         const updatedDetails = await User.findByIdAndUpdate(
             req.user.id,
             req.body,
-            {new :true, runvalidators : true}
+            {new :true, runvalidators : true} 
         ).select("-password");
         
         if( !updatedDetails ){
