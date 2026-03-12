@@ -13,8 +13,9 @@ const registerSchema = Joi.object({
     experienceLevel : Joi.string().optional(),
     location : Joi.string().optional(),
     profileImage : Joi.string().optional(),
-    resume : Joi.string().optional()
-
+    resume : Joi.string().optional(),
+    companyName : Joi.string().optional(),
+    isVerifiedRecruiter :Joi.boolean().optional()
 });
 
 export default registerSchema;
