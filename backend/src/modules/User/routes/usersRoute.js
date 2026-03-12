@@ -15,10 +15,14 @@ router.get('/profile', validateToken, getProfile);
 router.put('/profile', validateToken, updateProfile);
 router.delete('/profile', validateToken, deleteProfile);
 
+//RECRUITER + ADMIN ROUTES 
+router.get('/:id', validateToken, authorizeRoles("recruiter"), getUser);  // SEARCH USER BY ID
+
 // ADMIN ACCESS ROUTES
 router.get("/", validateToken, authorizeRoles("admin"), getAllUsers);
-router.get('/:id', validateToken, authorizeRoles("admin"), getUser);
 router.delete('/:id', validateToken, authorizeRoles("admin"), deleteUserAccount);
+
+
 
 
 export default router;

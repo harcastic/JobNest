@@ -11,7 +11,10 @@ const authorizeRoles =(minimumRole) =>{
             return res.status(401).json({
                 message : "Authentication required"
             });
-        }
+        } 
+
+        console.log("User role:", req.user.role);
+        console.log("Required role:", minimumRole);
 
         if(roleHierarchy[req.user.role] < roleHierarchy[minimumRole]){
             return res.status(403).json({
