@@ -13,18 +13,18 @@ import recruiterCreatedJobs from '../controllers/getRecruitersJobs.js';
 
 const router = express.Router();
 
+// GET ALL JOBS
+router.get('/', getAllJobs);
 
-// VIEW JOBS
-router.get('/', getAllJobs );    
+// RECRUITER DASHBOARD
+router.get('/recruiter/jobs', validateToken, authorizeRoles("recruiter"), recruiterCreatedJobs);
 
-// SEARCH / JOB BY ID
-router.get('/:id', getJobsById );
+// JOB DETAILS
+router.get('/:id', getJobsById);
 
-
-// CREATE JOBS
+// RECRUITER JOB MANAGEMENT
 router.post('/', validateToken, authorizeRoles("recruiter"), validate(jobSchemaValidation), createJobs);
 router.put('/:id', validateToken, authorizeRoles("recruiter"), updateJob);
 router.delete('/:id', validateToken, authorizeRoles("recruiter"), deleteJob);
-router.get('/recruiter/jobs', validateToken, authorizeRoles("recruiter"), recruiterCreatedJobs);
 
 export default router;
