@@ -9,7 +9,7 @@ import getJobsById from '../controllers/getJobsById.js';
 import createJobs from '../controllers/createJobs.js';
 import updateJob from '../controllers/updateJobs.js';
 import deleteJob from '../controllers/deleteJobs.js';
-import recruiterCreatedJobs from '../controllers/getRecruitersJobs.js';
+import recruiterCreatedJobs from '../controllers/getRecruitersJobs.js'; 
 
 const router = express.Router();
 

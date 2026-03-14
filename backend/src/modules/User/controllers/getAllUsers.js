@@ -2,8 +2,16 @@ import User from "../../Auth/models/user-authModel.js"
 
 const getAllUsers = async (req, res) =>{
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip =  ((skip - 1) * limit);
+
+        const users = await User.find().select("-password")
+            .skip(skip)
+            .limit(limit);
         
-        const users = await User.find().select("-password");
+        const totalUsers = await User.countDocuments();
+
         if(!users){
             return res.status(404).json({
                 message : " No users found"
@@ -11,7 +19,10 @@ const getAllUsers = async (req, res) =>{
         }
 
         return res.status(200).json({
-            count : req.users.length,
+            totalUsers,
+            currentPage : page,
+            totalPage : Math.ceil(totalUsers / limit),
+            count : users.length,
             users
         })
     } 
