@@ -29,6 +29,7 @@ const getAllJobs = async (req, res) =>{
         }
     
         const jobs = await Job.find(filter)
+            .sort({createdAt: -1})
             .skip(skip)
             .limit(limit)
             .populate("recruiter", "username email");
