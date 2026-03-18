@@ -21,6 +21,11 @@ const getUserApplication = async(req, res) =>{
                 message : "Job does not exist"
             });
         }
+        if(jobexists.recruiter.toString() !== req.user.id){
+            return res.status(403).json({
+                message : "You are not authorized to view these applications"
+            })
+        }
 
         const userApp = await Application.find({job : jobId})
             .sort({createdAt: -1})
