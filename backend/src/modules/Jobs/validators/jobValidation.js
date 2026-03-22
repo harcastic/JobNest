@@ -7,6 +7,7 @@ const jobSchemaValidation = Joi.object({
     aboutCompany : Joi.string().required(),
     jobDescription : Joi.string().required(),
     location : Joi.string().required(),
+    country : Joi.string().required(),
     duration : Joi.string().optional(),
     salary : Joi.string().optional(),
     jobType : Joi.string().valid("Onsite", "Hybrid", "Remote").required(), 

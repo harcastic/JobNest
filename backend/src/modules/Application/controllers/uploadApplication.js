@@ -28,8 +28,11 @@ const uploadmyApplication = async(req, res)=>{
                 message: "You have already applied to this job"
             });
         }
+        const resumeUrl = req.file.path;
 
         const uploadApp = await Application.create({
+            ...req.body,
+            resume : resumeUrl,
             user : req.user.id,
             job : jobId,
             recruiter: jobexists.recruiter
