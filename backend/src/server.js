@@ -17,8 +17,8 @@ const port = process.env.PORT || 8080;
 //Routes
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
-app.use('/jobs', jobRouter);
-app.use('/applications', applicationRouter);
+app.use('/api/jobs', jobRouter);
+app.use('/api/applications', applicationRouter);
 
 app.listen(port , () =>{
     console.log(`Server is running on port ${port}`);
