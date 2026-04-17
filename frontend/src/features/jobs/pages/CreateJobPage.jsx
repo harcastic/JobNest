@@ -9,13 +9,16 @@ const CreateJobPage = () => {
   const [error, setError] = useState(null);
   const [form, setForm] = useState({
     title: "",
-    company: "",
-    description: "",
+    companyName: "",
+    aboutCompany: "",
+    jobDescription: "",
     location: "",
+    country: "",
     salary: "",
-    jobType: "full-time",
-    experienceLevel: "entry-level",
-    requirements: "",
+    jobType: "Onsite",
+    skillsRequired: "",
+    duration: "",
+    timing: "",
   });
 
   const handleChange = (e) => {
@@ -30,9 +33,19 @@ const CreateJobPage = () => {
 
     try {
       const jobData = {
-        ...form,
-        requirements: form.requirements.split(",").map((req) => req.trim()),
-        salary: parseInt(form.salary),
+        title: form.title,
+        companyName: form.companyName,
+        aboutCompany: form.aboutCompany,
+        jobDescription: form.jobDescription,
+        location: form.location,
+        country: form.country,
+        salary: form.salary,
+        jobType: form.jobType,
+        skillsRequired: form.skillsRequired
+          ? form.skillsRequired.split(",").map((skill) => skill.trim())
+          : [],
+        duration: form.duration || undefined,
+        timing: form.timing || undefined,
       };
 
       await createJob(jobData);
@@ -66,13 +79,25 @@ const CreateJobPage = () => {
         </div>
 
         <div>
-          <label>Company *</label>
+          <label>Company Name *</label>
           <input
             type="text"
-            name="company"
-            value={form.company}
+            name="companyName"
+            value={form.companyName}
             onChange={handleChange}
-            placeholder="Company name"
+            placeholder="Enter company name"
+            required
+          />
+        </div>
+
+        <div>
+          <label>About Company *</label>
+          <textarea
+            name="aboutCompany"
+            value={form.aboutCompany}
+            onChange={handleChange}
+            placeholder="Brief description about the company"
+            rows="3"
             required
           />
         </div>
@@ -80,8 +105,8 @@ const CreateJobPage = () => {
         <div>
           <label>Job Description *</label>
           <textarea
-            name="description"
-            value={form.description}
+            name="jobDescription"
+            value={form.jobDescription}
             onChange={handleChange}
             placeholder="Describe the role and responsibilities"
             rows="5"
@@ -97,20 +122,44 @@ const CreateJobPage = () => {
               name="location"
               value={form.location}
               onChange={handleChange}
-              placeholder="City, Country"
+              placeholder="City"
               required
             />
           </div>
 
           <div>
-            <label>Salary (₹) *</label>
+            <label>Country *</label>
             <input
-              type="number"
+              type="text"
+              name="country"
+              value={form.country}
+              onChange={handleChange}
+              placeholder="Country"
+              required
+            />
+          </div>
+        </div>
+
+        <div style={styles.row}>
+          <div>
+            <label>Salary (₹)</label>
+            <input
+              type="text"
               name="salary"
               value={form.salary}
               onChange={handleChange}
-              placeholder="Annual salary"
-              required
+              placeholder="e.g., 50000-70000"
+            />
+          </div>
+
+          <div>
+            <label>Duration</label>
+            <input
+              type="text"
+              name="duration"
+              value={form.duration}
+              onChange={handleChange}
+              placeholder="e.g., 6 months"
             />
           </div>
         </div>
@@ -119,33 +168,29 @@ const CreateJobPage = () => {
           <div>
             <label>Job Type *</label>
             <select name="jobType" value={form.jobType} onChange={handleChange}>
-              <option value="full-time">Full Time</option>
-              <option value="part-time">Part Time</option>
-              <option value="contract">Contract</option>
-              <option value="internship">Internship</option>
+              <option value="Onsite">Onsite</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="Remote">Remote</option>
             </select>
           </div>
 
           <div>
-            <label>Experience Level *</label>
-            <select
-              name="experienceLevel"
-              value={form.experienceLevel}
+            <label>Timing</label>
+            <input
+              type="text"
+              name="timing"
+              value={form.timing}
               onChange={handleChange}
-            >
-              <option value="entry-level">Entry Level</option>
-              <option value="mid-level">Mid Level</option>
-              <option value="senior">Senior</option>
-              <option value="executive">Executive</option>
-            </select>
+              placeholder="e.g., Full-time, Part-time"
+            />
           </div>
         </div>
 
         <div>
-          <label>Requirements (comma-separated)</label>
+          <label>Skills Required (comma-separated)</label>
           <textarea
-            name="requirements"
-            value={form.requirements}
+            name="skillsRequired"
+            value={form.skillsRequired}
             onChange={handleChange}
             placeholder="e.g., React, Node.js, MongoDB"
             rows="3"

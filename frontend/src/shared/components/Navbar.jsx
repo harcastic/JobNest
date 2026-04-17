@@ -1,24 +1,75 @@
 // shared/components/Navbar.jsx
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../features/auth/hooks/useAuth";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout, loading: logoutLoading } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [userName, setUserName] = useState("User");
-  const [userAvatar, setUserAvatar] = useState("U");
+  const [userName, setUserName] = useState("");
+  const [userRole, setUserRole] = useState("user");
+  const [userImage, setUserImage] = useState("");
   const [searchTitle, setSearchTitle] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
   const token = localStorage.getItem("token");
 
+  // Load user data immediately and set up listener
   useEffect(() => {
-    // Get user name from localStorage or set default
-    const storedUserName = localStorage.getItem("userName");
-    if (storedUserName) {
-      setUserName(storedUserName);
-      setUserAvatar(storedUserName.charAt(0).toUpperCase());
-    }
+    // Load data directly from localStorage
+    const name = localStorage.getItem("userName");
+    const role = localStorage.getItem("userRole");
+    const image = localStorage.getItem("userImage");
+
+    console.log("Navbar useEffect - Loading from localStorage:", { name, role, image });
+
+    if (name) setUserName(name);
+    if (role) setUserRole(role);
+    if (image) setUserImage(image);
+
+    // Force update on window focus in case changed in another tab
+    const handleFocus = () => {
+      const focusName = localStorage.getItem("userName");
+      const focusRole = localStorage.getItem("userRole");
+      const focusImage = localStorage.getItem("userImage");
+      
+      if (focusName) setUserName(focusName);
+      if (focusRole) setUserRole(focusRole);
+      if (focusImage) setUserImage(focusImage);
+    };
+
+    // Listen for custom event when user image changes (same page)
+    const handleImageChange = (event) => {
+      console.log("userImageChanged event received:", event.detail);
+      setUserImage(event.detail.userImage);
+    };
+
+    // Listen for logout event to reset user data
+    const handleLogoutEvent = () => {
+      console.log("userLogout event received, resetting navbar");
+      setUserName("");
+      setUserRole("user");
+      setUserImage("");
+    };
+
+    // Listen for localStorage changes (from other tabs)
+    const handleStorageChange = () => {
+      const updatedImage = localStorage.getItem("userImage");
+      if (updatedImage) setUserImage(updatedImage);
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("userImageChanged", handleImageChange);
+    window.addEventListener("userLogout", handleLogoutEvent);
+    window.addEventListener("storage", handleStorageChange);
+    
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("userImageChanged", handleImageChange);
+      window.removeEventListener("userLogout", handleLogoutEvent);
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -32,10 +83,14 @@ const Navbar = () => {
     }
   }, [location.search, location.pathname]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userName");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      setShowDropdown(false);
+      await logout();
+      // logout() function will reload the page, no need to navigate
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   const handleSearch = (e) => {
@@ -59,57 +114,117 @@ const Navbar = () => {
     return null;
   }
 
+  // Render navigation items based on user role
+  const renderNavItems = () => {
+    if (userRole === "recruiter") {
+      return (
+        <>
+          <button
+            onClick={() => navigate("/jobs")}
+            style={{
+              ...styles.navLink,
+              ...(isActive("/jobs") ? styles.activeLink : {}),
+            }}
+          >
+            Find Jobs
+          </button>
+          <button
+            onClick={() => navigate("/recruiter/jobs")}
+            style={{
+              ...styles.navLink,
+              ...(isActive("/recruiter/jobs") ? styles.activeLink : {}),
+            }}
+          >
+            My Jobs
+          </button>
+          <button
+            onClick={() => navigate("/jobs/create")}
+            style={{
+              ...styles.navLink,
+              ...(isActive("/jobs/create") ? styles.activeLink : {}),
+            }}
+          >
+            Upload Job
+          </button>
+          <button
+            onClick={() => navigate("/about")}
+            style={styles.navLink}
+          >
+            About Us
+          </button>
+        </>
+      );
+    } else {
+      // Job Seeker (user) navbar
+      return (
+        <>
+          <button
+            onClick={() => navigate("/jobs")}
+            style={{
+              ...styles.navLink,
+              ...(isActive("/jobs") ? styles.activeLink : {}),
+            }}
+          >
+            Find Jobs
+          </button>
+          <button
+            onClick={() => navigate("/applications")}
+            style={{
+              ...styles.navLink,
+              ...(isActive("/applications") ? styles.activeLink : {}),
+            }}
+          >
+            My Applications
+          </button>
+          <button
+            onClick={() => navigate("/about")}
+            style={styles.navLink}
+          >
+            About Us
+          </button>
+        </>
+      );
+    }
+  };
+
   return (
     <>
       {/* Top Navigation Bar */}
       <nav style={styles.navbar}>
         <div style={styles.topContainer}>
           <div style={styles.logoSection} onClick={() => navigate("/jobs")}>
-            <div style={styles.logo}>∞</div>
+            <div style={styles.logo}>Voo</div>
           </div>
 
           <div style={styles.navLinks}>
-            <button
-              onClick={() => navigate("/jobs")}
-              style={{
-                ...styles.navLink,
-                ...(isActive("/jobs") ? styles.activeLink : {}),
-              }}
-            >
-              Find Jobs
-            </button>
-            <button
-              onClick={() => navigate("/jobs")}
-              style={styles.navLink}
-            >
-              Find Talent
-            </button>
-            <button
-              onClick={() => navigate("/jobs/create")}
-              style={styles.navLink}
-            >
-              Upload Job
-            </button>
-            <button
-              onClick={() => navigate("/about")}
-              style={styles.navLink}
-            >
-              About us
-            </button>
+            {renderNavItems()}
           </div>
 
           <div style={styles.rightSection}>
-            <button style={styles.notificationBtn} title="Notifications">
-              🔔
-            </button>
-
             <div style={styles.profileDropdown}>
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
                 style={styles.profileButton}
               >
-                <span style={styles.userName}>{userName}</span>
-                <div style={styles.avatarCircle}>{userAvatar}</div>
+                <div style={styles.userInfo}>
+                  <span style={styles.userName}>
+                    {userName || "User"}
+                  </span>
+                  <span style={styles.userRole}>
+                    {userRole === 'recruiter' ? 'Recruiter' : 'Job Seeker'}
+                  </span>
+                </div>
+                <div style={styles.avatarCircle}>
+                  {userImage ? (
+                    <img 
+                      src={userImage} 
+                      alt="User"
+                      style={styles.avatarImage}
+                    />
+                  ) : (
+                    <span>{(userName || "U").charAt(0).toUpperCase()}</span>
+                  )}
+                </div>
               </button>
 
               {showDropdown && (
@@ -132,21 +247,27 @@ const Navbar = () => {
                   >
                     Edit Profile
                   </button>
-                  <button
-                    onClick={() => {
-                      navigate("/applications");
-                      setShowDropdown(false);
-                    }}
-                    style={styles.dropdownItem}
-                  >
-                    My Applications
-                  </button>
+                  
+                  {/* Show "My Applications" only for Job Seekers, not Recruiters */}
+                  {userRole !== 'recruiter' && (
+                    <button
+                      onClick={() => {
+                        navigate("/applications");
+                        setShowDropdown(false);
+                      }}
+                      style={styles.dropdownItem}
+                    >
+                      My Applications
+                    </button>
+                  )}
+                  
                   <div style={styles.divider}></div>
                   <button
                     onClick={handleLogout}
-                    style={{ ...styles.dropdownItem, ...styles.logoutItem }}
+                    disabled={logoutLoading}
+                    style={{ ...styles.dropdownItem, ...styles.logoutItem, ...(logoutLoading ? styles.disabledButton : {}) }}
                   >
-                    Logout
+                    {logoutLoading ? "Logging out..." : "Logout"}
                   </button>
                 </div>
               )}
@@ -155,48 +276,50 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Search Bar Section */}
-      <div style={styles.searchSection}>
-        <div style={styles.searchContainer}>
-          <form style={styles.searchForm} onSubmit={handleSearch}>
-            <div style={styles.searchInputWrapper}>
-              <span style={styles.searchIcon}>🔍</span>
-              <input
-                type="text"
-                placeholder="Job title or keyword"
-                value={searchTitle}
-                onChange={(e) => setSearchTitle(e.target.value)}
-                style={styles.searchInput}
-              />
-            </div>
+      {/* Search Bar Section - Only for Job Seekers */}
+      {userRole !== 'recruiter' && (
+        <div style={styles.searchSection}>
+          <div style={styles.searchContainer}>
+            <form style={styles.searchForm} onSubmit={handleSearch}>
+              <div style={styles.searchInputWrapper}>
+                <span style={styles.searchIcon}>🔍</span>
+                <input
+                  type="text"
+                  placeholder="Job title or keyword"
+                  value={searchTitle}
+                  onChange={(e) => setSearchTitle(e.target.value)}
+                  style={styles.searchInput}
+                />
+              </div>
 
-            <div style={styles.searchInputWrapper}>
-              <span style={styles.searchIcon}>📍</span>
-              <input
-                type="text"
-                placeholder="Add country or city"
-                value={searchLocation}
-                onChange={(e) => setSearchLocation(e.target.value)}
-                style={styles.searchInput}
-              />
-            </div>
+              <div style={styles.searchInputWrapper}>
+                <span style={styles.searchIcon}>📍</span>
+                <input
+                  type="text"
+                  placeholder="Add country or city"
+                  value={searchLocation}
+                  onChange={(e) => setSearchLocation(e.target.value)}
+                  style={styles.searchInput}
+                />
+              </div>
 
-            <button type="submit" style={styles.searchButton}>
-              Search
-            </button>
-          </form>
+              <button type="submit" style={styles.searchButton}>
+                Search
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
 
 const styles = {
   navbar: {
-    background: "#1a1d2e",
-    color: "white",
+    background: "#e8e8f0",
+    color: "#333",
     padding: "12px 0",
-    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.15)",
+    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
     position: "sticky",
     top: 0,
     zIndex: 100,
@@ -220,16 +343,14 @@ const styles = {
     },
   },
   logo: {
-    fontSize: "32px",
+    fontSize: "28px",
     fontWeight: "bold",
-    background: "linear-gradient(135deg, #5b7bff 0%, #4a5fff 100%)",
-    width: "50px",
-    height: "50px",
+    color: "#4a5fff",
+    width: "auto",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: "8px",
-    color: "white",
+    letterSpacing: "-1px",
   },
   navLinks: {
     display: "flex",
@@ -239,7 +360,7 @@ const styles = {
   },
   navLink: {
     background: "transparent",
-    color: "#e0e0e0",
+    color: "#666",
     border: "none",
     cursor: "pointer",
     fontSize: "15px",
@@ -248,30 +369,17 @@ const styles = {
     transition: "color 0.3s ease, border-bottom 0.3s ease",
     borderBottom: "2px solid transparent",
     ":hover": {
-      color: "#ffffff",
+      color: "#333",
     },
   },
   activeLink: {
-    color: "#5b7bff",
-    borderBottom: "2px solid #5b7bff",
+    color: "#4a5fff",
+    borderBottom: "2px solid #4a5fff",
   },
   rightSection: {
     display: "flex",
     alignItems: "center",
     gap: "20px",
-  },
-  notificationBtn: {
-    background: "transparent",
-    border: "none",
-    color: "white",
-    fontSize: "20px",
-    cursor: "pointer",
-    padding: "8px 12px",
-    borderRadius: "6px",
-    transition: "background 0.3s ease",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
   },
   profileDropdown: {
     position: "relative",
@@ -279,7 +387,7 @@ const styles = {
   profileButton: {
     display: "flex",
     alignItems: "center",
-    gap: "10px",
+    gap: "12px",
     background: "transparent",
     border: "none",
     cursor: "pointer",
@@ -287,14 +395,34 @@ const styles = {
     borderRadius: "8px",
     transition: "background 0.3s ease",
   },
+  userInfo: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    gap: "4px",
+    minWidth: "80px",
+  },
   userName: {
-    color: "#e0e0e0",
-    fontSize: "14px",
-    fontWeight: "500",
+    color: "#333",
+    fontSize: "13px",
+    fontWeight: "600",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    maxWidth: "100px",
+  },
+  userRole: {
+    color: "#999",
+    fontSize: "11px",
+    fontWeight: "400",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    maxWidth: "100px",
   },
   avatarCircle: {
-    width: "36px",
-    height: "36px",
+    width: "40px",
+    height: "40px",
     borderRadius: "50%",
     background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     display: "flex",
@@ -304,6 +432,12 @@ const styles = {
     fontWeight: "bold",
     fontSize: "15px",
     flexShrink: 0,
+    overflow: "hidden",
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
   },
   dropdownMenu: {
     position: "absolute",
@@ -340,9 +474,9 @@ const styles = {
   },
   // Search Section Styles
   searchSection: {
-    background: "#1a1d2e",
-    borderTop: "1px solid #2a2f42",
-    borderBottom: "1px solid #2a2f42",
+    background: "#e8e8f0",
+    borderTop: "1px solid #d0d0d8",
+    borderBottom: "1px solid #d0d0d8",
     padding: "24px 0",
     position: "sticky",
     top: 70,
@@ -392,13 +526,17 @@ const styles = {
     color: "white",
     border: "none",
     padding: "14px 40px",
-    borderRadius: "8px",
+    borderRadius: "25px",
     fontSize: "15px",
     fontWeight: "600",
     cursor: "pointer",
     transition: "transform 0.3s ease, box-shadow 0.3s ease",
     whiteSpace: "nowrap",
     boxShadow: "0 4px 15px rgba(91, 123, 255, 0.3)",
+  },
+  disabledButton: {
+    opacity: 0.6,
+    cursor: "not-allowed",
   },
 };
 

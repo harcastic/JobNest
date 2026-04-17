@@ -1,10 +1,62 @@
 // features/applications/pages/AppliedJobs.jsx
 import { useApplications } from "../hooks/useApplications";
+import { deleteApplication } from "../services/applicationService";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const AppliedJobs = () => {
   const navigate = useNavigate();
-  const { applications, loading, error } = useApplications();
+  const { applications, loading, error, refetch } = useApplications();
+  const [userRole, setUserRole] = useState("user");
+  const [deleting, setDeleting] = useState(null); // Track which app is being deleted
+  const [deleteError, setDeleteError] = useState(null);
+
+  // Check user role and redirect recruiters
+  useEffect(() => {
+    const role = localStorage.getItem("userRole");
+    if (role === "recruiter") {
+      setUserRole("recruiter");
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        navigate("/jobs");
+      }, 2000);
+    } else {
+      setUserRole(role || "user");
+    }
+  }, [navigate]);
+
+  const handleDelete = async (appId) => {
+    if (!window.confirm("Are you sure you want to withdraw this application?")) {
+      return;
+    }
+
+    setDeleting(appId);
+    setDeleteError(null);
+
+    try {
+      await deleteApplication(appId);
+      // Refetch applications to update the list
+      if (refetch) {
+        refetch();
+      }
+    } catch (err) {
+      setDeleteError(err.response?.data?.message || "Failed to delete application");
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  // Don't render if recruiter (will redirect)
+  if (userRole === "recruiter") {
+    return (
+      <div style={styles.container}>
+        <div style={styles.accessDenied}>
+          <h2>Access Denied</h2>
+          <p>Recruiters cannot view applications. Redirecting to jobs page...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -31,6 +83,15 @@ const AppliedJobs = () => {
         </button>
       </div>
 
+      {deleteError && (
+        <div style={styles.deleteError}>
+          <p>{deleteError}</p>
+          <button onClick={() => setDeleteError(null)} style={styles.dismissBtn}>
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {!applications || applications.length === 0 ? (
         <div style={styles.noApplications}>
           <p>You haven't applied to any jobs yet.</p>
@@ -41,7 +102,11 @@ const AppliedJobs = () => {
       ) : (
         <div style={styles.applicationsList}>
           {applications.map((app) => (
-            <div key={app._id} style={styles.card}>
+            <div
+              key={app._id}
+              style={styles.card}
+              onClick={() => navigate(`/applications/${app._id}`)}
+            >
               <div style={styles.cardContent}>
                 <h3>{app.job?.title || "Job Deleted"}</h3>
                 <p style={styles.company}>{app.job?.companyName}</p>
@@ -52,6 +117,20 @@ const AppliedJobs = () => {
                   {app.status || "pending"}
                 </span>
                 <small>{new Date(app.createdAt).toLocaleDateString()}</small>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(app._id);
+                  }}
+                  disabled={deleting === app._id}
+                  style={{
+                    ...styles.deleteBtn,
+                    opacity: deleting === app._id ? 0.6 : 1,
+                    cursor: deleting === app._id ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {deleting === app._id ? "Withdrawing..." : "Withdraw"}
+                </button>
               </div>
             </div>
           ))}
@@ -126,7 +205,8 @@ const styles = {
     padding: "15px",
     borderRadius: "8px",
     cursor: "pointer",
-    transition: "box-shadow 0.3s",
+    transition: "all 0.3s ease",
+    backgroundColor: "#fff",
   },
   cardContent: {
     flex: 1,
@@ -146,6 +226,45 @@ const styles = {
     flexDirection: "column",
     alignItems: "flex-end",
     gap: "8px",
+  },
+  deleteBtn: {
+    padding: "6px 12px",
+    background: "#e74c3c",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    fontSize: "12px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    transition: "background 0.3s",
+  },
+  deleteError: {
+    padding: "12px",
+    background: "#ffebee",
+    border: "1px solid #ef5350",
+    borderRadius: "4px",
+    color: "#c62828",
+    marginBottom: "15px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  dismissBtn: {
+    padding: "4px 8px",
+    background: "transparent",
+    color: "#c62828",
+    border: "1px solid #c62828",
+    borderRadius: "4px",
+    fontSize: "12px",
+    cursor: "pointer",
+  },
+  accessDenied: {
+    textAlign: "center",
+    padding: "40px 20px",
+    background: "#ffebee",
+    borderRadius: "8px",
+    color: "#c62828",
+    marginTop: "30px",
   },
 };
 

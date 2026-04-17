@@ -23,18 +23,29 @@ export const useJobs = () => {
         const location = searchParams.get("location");
         const jobType = searchParams.get("jobType");
         const companyName = searchParams.get("companyName");
+        const employmentType = searchParams.get("employmentType");
+        const salaryMin = searchParams.get("salaryMin");
+        const salaryMax = searchParams.get("salaryMax");
+        const experienceLevel = searchParams.get("experienceLevel");
         const page = searchParams.get("page") || 1;
-        const limit = 10;
+        const limit = 12;  // Changed from 10 to 12 to match backend
         
         if (title) filters.title = title;
         if (location) filters.location = location;
         if (jobType) filters.jobType = jobType;
         if (companyName) filters.companyName = companyName;
+        if (employmentType) filters.employmentType = employmentType;
+        if (salaryMin) filters.salaryMin = salaryMin;
+        if (salaryMax) filters.salaryMax = salaryMax;
+        if (experienceLevel) filters.experienceLevel = experienceLevel;
         filters.page = page;
         filters.limit = limit;
         
+        console.log("useJobs fetching with filters:", filters);
+        
         // Call API with filters
         const response = await getJobs(filters);
+        console.log("useJobs received response:", response);
         
         // Handle both direct data return and full response
         if (Array.isArray(response)) {

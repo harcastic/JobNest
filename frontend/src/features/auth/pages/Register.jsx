@@ -2,14 +2,32 @@
 import AuthForm from "../components/authForm";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Register = () => {
   const { register, error, loading } = useAuth();
   const navigate = useNavigate();
+  const [authError, setAuthError] = useState("");
 
   const handleRegister = async (data) => {
-    const res = await register(data);
-    if (res) navigate("/jobs");
+    try {
+      console.log("Attempting register with:", data);
+      const res = await register(data);
+      console.log("Register result:", res);
+      
+      if (res && res.token) {
+        console.log("Registration successful, reloading page to get fresh user data...");
+        // Reload page after a short delay to ensure localStorage is set
+        setTimeout(() => {
+          window.location.href = "/jobs";
+        }, 100);
+      } else {
+        setAuthError("Registration failed - no token received");
+      }
+    } catch (err) {
+      console.error("Register error:", err);
+      setAuthError(err.message);
+    }
   };
 
   return (
@@ -20,7 +38,7 @@ const Register = () => {
         
         <AuthForm type="register" onSubmit={handleRegister} />
         
-        {error && <p style={styles.error}>{error}</p>}
+        {(error || authError) && <p style={styles.error}>{error || authError}</p>}
         
         <div style={styles.footer}>
           <p>Already have an account?</p>

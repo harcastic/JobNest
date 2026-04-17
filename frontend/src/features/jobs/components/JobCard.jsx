@@ -28,7 +28,14 @@ const JobCard = ({ job, applicantsCount = 0 }) => {
   };
 
   return (
-    <Link to={`/jobs/${job._id}`} style={{ textDecoration: "none", color: "inherit" }}>
+    <Link to={`/jobs/${job._id}`} style={{ 
+      textDecoration: "none", 
+      color: "inherit",
+      display: "flex",
+      width: "100%",
+      minWidth: 0,
+      height: "100%",
+    }}>
       <div style={styles.card}>
         {/* Header with logo and save button */}
         <div style={styles.header}>
@@ -102,16 +109,26 @@ const styles = {
     ":hover": {
       boxShadow: "0 4px 16px rgba(0, 0, 0, 0.12)",
     },
+    width: "100%",
+    maxWidth: "100%",
+    boxSizing: "border-box",
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    flex: 1,
   },
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "flex-start",
     marginBottom: "12px",
+    gap: "8px",
+    minWidth: 0,
   },
   logoContainer: {
     display: "flex",
     gap: "12px",
+    minWidth: 0,
   },
   logo: {
     width: "48px",
@@ -133,26 +150,42 @@ const styles = {
     cursor: "pointer",
     padding: "0",
     transition: "color 0.3s ease",
+    flexShrink: 0,
   },
   titleSection: {
     marginBottom: "12px",
+    minWidth: 0,
+    flex: 1,
   },
   jobTitle: {
     margin: "0 0 4px 0",
     fontSize: "18px",
     fontWeight: "600",
     color: "#1a1a1a",
+    wordWrap: "break-word",
+    overflowWrap: "break-word",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
   },
   companyInfo: {
     margin: "0",
     fontSize: "14px",
     color: "#666",
+    wordWrap: "break-word",
+    overflowWrap: "break-word",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   },
   tagsContainer: {
     display: "flex",
     gap: "8px",
     marginBottom: "12px",
     flexWrap: "wrap",
+    minWidth: 0,
   },
   tag: {
     padding: "4px 12px",
@@ -160,12 +193,21 @@ const styles = {
     fontSize: "12px",
     fontWeight: "500",
     display: "inline-block",
+    whiteSpace: "nowrap",
   },
   description: {
     margin: "0 0 12px 0",
     fontSize: "13px",
     color: "#666",
     lineHeight: "1.5",
+    wordWrap: "break-word",
+    overflowWrap: "break-word",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    flex: 1,
   },
   footer: {
     display: "flex",
@@ -173,15 +215,25 @@ const styles = {
     alignItems: "center",
     paddingTop: "12px",
     borderTop: "1px solid #f0f0f0",
+    gap: "8px",
+    marginTop: "auto",
+    minWidth: 0,
   },
   salary: {
     fontSize: "18px",
     fontWeight: "700",
     color: "#1a1a1a",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   postedTime: {
     fontSize: "13px",
     color: "#999",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    textAlign: "right",
   },
 };
 

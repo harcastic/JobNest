@@ -7,21 +7,33 @@ export const useUserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const fetchProfile = async () => {
+    try {
+      const data = await getUserProfile();
+      console.log("Fetched profile:", data);
+      setUser(data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching profile", err);
+      setError("Failed to load profile. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const data = await getUserProfile();
-        setUser(data);
-        setError(null);
-      } catch (err) {
-        console.error("Error fetching profile", err);
-        setError("Failed to load profile. Please try again.");
-      } finally {
-        setLoading(false);
-      }
+    fetchProfile();
+  }, []);
+
+  // Listen for image change events and refetch profile
+  useEffect(() => {
+    const handleImageChange = (event) => {
+      console.log("ProfilePage: userImageChanged event received, refetching profile");
+      fetchProfile();
     };
 
-    fetchProfile();
+    window.addEventListener("userImageChanged", handleImageChange);
+    return () => window.removeEventListener("userImageChanged", handleImageChange);
   }, []);
 
   return { user, loading, error };

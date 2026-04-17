@@ -48,6 +48,31 @@ const ProfilePage = () => {
       </div>
 
       <div style={styles.profileCard}>
+        {/* Profile Header with Circular Picture */}
+        <div style={styles.profileHeader}>
+          <div style={styles.profileImageContainer}>
+            {user.profileImage ? (
+              <img
+                src={user.profileImage}
+                alt="Profile"
+                style={styles.circularImage}
+              />
+            ) : (
+              <div style={styles.placeholderImage}>
+                <span style={styles.placeholderText}>
+                  {user.username?.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+          </div>
+          <div style={styles.profileHeaderInfo}>
+            <h1 style={styles.userName}>{user.username}</h1>
+            <p style={styles.userRole}>{user.role}</p>
+            <p style={styles.userEmail}>{user.email}</p>
+            {user.location && <p style={styles.userLocation}>📍 {user.location}</p>}
+          </div>
+        </div>
+
         {/* Basic Information */}
         <section style={styles.section}>
           <h2>Basic Information</h2>
@@ -117,17 +142,6 @@ const ProfilePage = () => {
         </section>
 
         {/* Additional Information */}
-        {user.profileImage && (
-          <section style={styles.section}>
-            <h2>Profile Picture</h2>
-            <img
-              src={user.profileImage}
-              alt="Profile"
-              style={styles.profileImage}
-            />
-          </section>
-        )}
-
         {user.resume && (
           <section style={styles.section}>
             <h2>Resume</h2>
@@ -193,6 +207,68 @@ const styles = {
     background: "white",
     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
   },
+  profileHeader: {
+    display: "flex",
+    alignItems: "center",
+    gap: "30px",
+    marginBottom: "40px",
+    paddingBottom: "30px",
+    borderBottom: "2px solid #eee",
+  },
+  profileImageContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  circularImage: {
+    width: "150px",
+    height: "150px",
+    borderRadius: "50%",
+    objectFit: "cover",
+    border: "4px solid #667eea",
+    boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
+  },
+  placeholderImage: {
+    width: "150px",
+    height: "150px",
+    borderRadius: "50%",
+    backgroundColor: "#667eea",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    border: "4px solid #667eea",
+    boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
+  },
+  placeholderText: {
+    fontSize: "48px",
+    fontWeight: "bold",
+    color: "white",
+  },
+  profileHeaderInfo: {
+    flex: 1,
+  },
+  userName: {
+    margin: "0 0 10px 0",
+    fontSize: "28px",
+    color: "#333",
+  },
+  userRole: {
+    margin: "0 0 8px 0",
+    fontSize: "16px",
+    color: "#667eea",
+    fontWeight: "bold",
+    textTransform: "capitalize",
+  },
+  userEmail: {
+    margin: "0 0 8px 0",
+    fontSize: "14px",
+    color: "#666",
+  },
+  userLocation: {
+    margin: "0",
+    fontSize: "14px",
+    color: "#999",
+  },
   section: {
     marginBottom: "30px",
     paddingBottom: "30px",
@@ -232,10 +308,6 @@ const styles = {
     padding: "6px 12px",
     borderRadius: "20px",
     fontSize: "14px",
-  },
-  profileImage: {
-    maxWidth: "200px",
-    borderRadius: "8px",
   },
   link: {
     color: "#667eea",

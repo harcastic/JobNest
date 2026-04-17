@@ -20,9 +20,22 @@ const register = async(req, res) => {
             role 
         });
 
+        const token = jwt.sign(
+            {id : newUser._id, role : newUser.role},
+            process.env.TOKEN_SECRET_KEY,
+            {expiresIn : '2h'}
+        );
+
         return res.status(201).json({
             message : `User registered successfully! : ${username} `,
-            newUser 
+            token,
+            user: {
+                id: newUser._id,
+                username: newUser.username,
+                email: newUser.email,
+                role: newUser.role,
+                profileImage: newUser.profileImage
+            }
         });
     
     } 
@@ -63,11 +76,34 @@ export const login = async(req, res) => {
             {expiresIn : '2h'}
         );
     
-        return res.status(200).json({token});
+        return res.status(200).json({
+            token,
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                profileImage: user.profileImage
+            }
+        });
     } 
     catch (error) {
         return res.status(500).json({
             message : "Login failed! Something went wrong"
         })    
+    }
+};
+
+export const logout = async(req, res) => {
+    try {
+        // Logout is handled on the frontend by clearing localStorage
+        // This endpoint can be used for backend token invalidation in the future
+        return res.status(200).json({
+            message: "Logout successful"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Logout failed! Something went wrong"
+        });
     }
 };

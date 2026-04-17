@@ -1,19 +1,21 @@
 // features/user/pages/EditProfilePage.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserProfile, updateUserProfile } from "../services/userService";
 
 const EditProfilePage = () => {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [form, setForm] = useState({
     username: "",
     bio: "",
     location: "",
-    profileImage: "",
     skills: "",
     experienceLevel: "",
     companyName: "",
@@ -28,11 +30,14 @@ const EditProfilePage = () => {
           username: userData.username || "",
           bio: userData.bio || "",
           location: userData.location || "",
-          profileImage: userData.profileImage || "",
           skills: userData.skills ? userData.skills.join(", ") : "",
           experienceLevel: userData.experienceLevel || "",
           companyName: userData.companyName || "",
         });
+        // Initialize image preview with existing profile image
+        if (userData.profileImage) {
+          setImagePreview(userData.profileImage);
+        }
       } catch (err) {
         console.error("Error fetching profile", err);
         setError("Failed to load profile");
@@ -49,21 +54,83 @@ const EditProfilePage = () => {
     setForm({ ...form, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      const validTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!validTypes.includes(file.type)) {
+        setError("Please upload a valid image file (JPG, PNG, or GIF)");
+        return;
+      }
+
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image file must be less than 5MB");
+        return;
+      }
+
+      setSelectedFile(file);
+      setError(null);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearImage = () => {
+    setSelectedFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     setError(null);
 
     try {
-      const updateData = {
-        ...form,
-        skills: form.skills
-          .split(",")
-          .map((skill) => skill.trim())
-          .filter((skill) => skill),
-      };
+      // Use FormData for multipart file upload
+      const formData = new FormData();
+      
+      // Add all form fields
+      formData.append("username", form.username);
+      formData.append("bio", form.bio);
+      formData.append("location", form.location);
+      formData.append("experienceLevel", form.experienceLevel);
+      formData.append("companyName", form.companyName);
+      
+      // Add skills as JSON array
+      const skills = form.skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter((skill) => skill);
+      formData.append("skills", JSON.stringify(skills));
 
-      await updateUserProfile(updateData);
+      // Add image file if selected
+      if (selectedFile) {
+        formData.append("profileImage", selectedFile);
+      }
+
+      const updatedUser = await updateUserProfile(formData);
+      
+      // Update localStorage with new profile image
+      if (updatedUser.profileImage) {
+        localStorage.setItem("userImage", updatedUser.profileImage);
+        
+        // Dispatch custom event to notify navbar of image change
+        const event = new CustomEvent("userImageChanged", {
+          detail: { userImage: updatedUser.profileImage }
+        });
+        window.dispatchEvent(event);
+      }
+      
       alert("Profile updated successfully!");
       navigate("/profile");
     } catch (err) {
@@ -135,16 +202,37 @@ const EditProfilePage = () => {
               />
             </div>
 
+            {/* Profile Image Upload */}
             <div>
-              <label>Profile Image URL</label>
-              <input
-                type="url"
-                name="profileImage"
-                value={form.profileImage}
-                onChange={handleChange}
-                placeholder="https://example.com/image.jpg"
-                style={styles.input}
-              />
+              <label>Profile Picture</label>
+              <div style={styles.imageUploadSection}>
+                {imagePreview && (
+                  <div style={styles.imagePreviewContainer}>
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      style={styles.imagePreview}
+                    />
+                    <button
+                      type="button"
+                      onClick={clearImage}
+                      style={styles.clearImageBtn}
+                    >
+                      Remove Image
+                    </button>
+                  </div>
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/gif"
+                  onChange={handleImageChange}
+                  style={styles.fileInput}
+                />
+                <small style={styles.hint}>
+                  JPG, PNG, or GIF • Max 5MB
+                </small>
+              </div>
             </div>
           </fieldset>
 
@@ -316,6 +404,46 @@ const styles = {
     fontSize: "18px",
     color: "#666",
     textAlign: "center",
+  },
+  imageUploadSection: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    marginTop: "10px",
+  },
+  imagePreviewContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "10px",
+    padding: "15px",
+    background: "#f9f9f9",
+    borderRadius: "4px",
+    border: "1px solid #eee",
+  },
+  imagePreview: {
+    width: "150px",
+    height: "150px",
+    borderRadius: "50%",
+    objectFit: "cover",
+    border: "4px solid #667eea",
+    boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
+  },
+  clearImageBtn: {
+    padding: "6px 12px",
+    background: "#e74c3c",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontSize: "12px",
+    fontWeight: "bold",
+  },
+  fileInput: {
+    padding: "8px",
+    border: "2px solid #667eea",
+    borderRadius: "4px",
+    cursor: "pointer",
   },
 };
 

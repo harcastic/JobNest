@@ -36,6 +36,16 @@ const jobSchema = new mongoose.Schema({
         enum : ["Onsite", "Hybrid", "Remote"],
         required : true
     },
+    employmentType : {
+        type : String,
+        enum : ["full-time", "part-time", "contract", "internship"],
+        default : "full-time"
+    },
+    experienceLevel : {
+        type : String,
+        enum : ["entry-level", "mid-level", "senior", "executive"],
+        default : "entry-level"
+    },
     timing : {
         type : String
     },

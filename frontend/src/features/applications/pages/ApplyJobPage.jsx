@@ -1,5 +1,5 @@
 // features/applications/pages/ApplyJobPage.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { applyToJob } from "../services/applicationService";
 
@@ -8,6 +8,7 @@ const ApplyJobPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [userRole, setUserRole] = useState("user");
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -21,6 +22,33 @@ const ApplyJobPage = () => {
     salaryExpectation: "",
     workAuthorization: false,
   });
+
+  // Check user role and redirect recruiters
+  useEffect(() => {
+    const role = localStorage.getItem("userRole");
+    if (role === "recruiter") {
+      setUserRole("recruiter");
+      setError("Recruiters cannot apply to jobs. Please go back.");
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        navigate("/jobs");
+      }, 2000);
+    } else {
+      setUserRole(role || "user");
+    }
+  }, [navigate]);
+
+  // Don't render if recruiter (will redirect)
+  if (userRole === "recruiter") {
+    return (
+      <div style={styles.container}>
+        <div style={styles.errorMessage}>
+          <h2>Access Denied</h2>
+          <p>Recruiters cannot apply to jobs. Redirecting to jobs page...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -391,6 +419,14 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     flex: 1,
+  },
+  errorMessage: {
+    textAlign: "center",
+    padding: "40px 20px",
+    background: "#ffebee",
+    borderRadius: "8px",
+    color: "#c62828",
+    marginTop: "30px",
   },
 };
 

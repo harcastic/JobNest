@@ -5,6 +5,13 @@ const uploadmyApplication = async(req, res)=>{
     try {
         const { jobId } = req.params;
 
+        // Check if user is a recruiter - recruiters cannot apply to jobs
+        if(req.user && req.user.role === 'recruiter') {
+            return res.status(403).json({
+                message: "Recruiters cannot apply to jobs"
+            });
+        }
+
         if(!jobId){
             return res.status(400).json({
                 message : "Job ID is required"

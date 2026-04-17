@@ -7,6 +7,7 @@ import RecruiterJobsPage from "../features/jobs/pages/RecruiterJobsPage";
 import CreateJobPage from "../features/jobs/pages/CreateJobPage";
 import EditJobPage from "../features/jobs/pages/EditJobPage";
 import AppliedJobs from "../features/applications/pages/AppliedJobs";
+import ApplicationDetailPage from "../features/applications/pages/ApplicationDetailPage";
 import ApplyJobPage from "../features/applications/pages/ApplyJobPage";
 import ProfilePage from "../features/user/pages/ProfilePage";
 import EditProfilePage from "../features/user/pages/EditProfilePage";
@@ -34,6 +35,7 @@ export default function AppRoutes() {
 
         {/* Application Routes */}
         <Route path="/apply/:id" element={<ApplyJobPage />} />
+        <Route path="/applications/:id" element={<ApplicationDetailPage />} />
         <Route path="/applications" element={<AppliedJobs />} />
 
         {/* User Profile Routes */}

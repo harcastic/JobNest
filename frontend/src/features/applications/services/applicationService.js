@@ -16,6 +16,16 @@ export const getUserApplications = async () => {
   return res.data;
 };
 
+export const getApplicationById = async (applicationId) => {
+  const res = await api.get(`/applications/${applicationId}`);
+  return res.data;
+};
+
+export const updateApplication = async (applicationId, applicationData) => {
+  const res = await api.put(`/applications/${applicationId}`, applicationData);
+  return res.data;
+};
+
 export const deleteApplication = async (applicationId) => {
   const res = await api.delete(`/applications/${applicationId}`);
   return res.data;

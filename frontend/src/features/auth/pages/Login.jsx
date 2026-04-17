@@ -2,14 +2,32 @@
 import AuthForm from "../components/authForm";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Login = () => {
   const { login, error, loading } = useAuth();
   const navigate = useNavigate();
+  const [authError, setAuthError] = useState("");
 
   const handleLogin = async (data) => {
-    const res = await login(data);
-    if (res) navigate("/jobs");
+    try {
+      console.log("Attempting login with:", data);
+      const res = await login(data);
+      console.log("Login result:", res);
+      
+      if (res && res.token) {
+        console.log("Login successful, reloading page to get fresh user data...");
+        // Reload page after a short delay to ensure localStorage is set
+        setTimeout(() => {
+          window.location.href = "/jobs";
+        }, 100);
+      } else {
+        setAuthError("Login failed - no token received");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setAuthError(err.message);
+    }
   };
 
   return (
@@ -20,7 +38,7 @@ const Login = () => {
         
         <AuthForm type="login" onSubmit={handleLogin} />
         
-        {error && <p style={styles.error}>{error}</p>}
+        {(error || authError) && <p style={styles.error}>{error || authError}</p>}
         
         <div style={styles.footer}>
           <p>Don't have an account?</p>
