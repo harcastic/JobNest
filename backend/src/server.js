@@ -1,5 +1,6 @@
 import express from 'express'
 import dotenv from "dotenv";
+import cors from 'cors';
 dotenv.config();
 
 import dbConnect from './config/dbConnect.js'
@@ -10,6 +11,7 @@ import applicationRouter from './modules/Application/routes/applicationRoute.js'
 dbConnect();
 
 const app = express();
+app.use(cors());
 app.use(express.json()); 
 const port = process.env.PORT || 8080; 
 
@@ -20,6 +22,6 @@ app.use('/api/user', userRouter);
 app.use('/api/jobs', jobRouter);
 app.use('/api/applications', applicationRouter);
 
-app.listen(port , () =>{
+app.listen(port , () =>{ 
     console.log(`Server is running on port ${port}`);
 });

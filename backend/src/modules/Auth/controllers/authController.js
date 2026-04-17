@@ -45,7 +45,7 @@ export const login = async(req, res) => {
     
         if(!user) { 
             return res.status(404).json({ 
-                message : `User with ${username} not found`
+                message : `User not found`
             });
         }
     

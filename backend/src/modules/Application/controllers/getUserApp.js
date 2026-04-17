@@ -34,7 +34,7 @@ const getUserApplication = async(req, res) =>{
         ;
         if(userApp.length === 0){
             return res.status(404).json({
-                message : "Failed to fetch applications"
+                message : "No applicants has applied yet"
             });
         }
         const totalApp = await Application.countDocuments({

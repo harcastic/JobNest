@@ -34,7 +34,7 @@ const getAllJobs = async (req, res) =>{
             .limit(limit)
             .populate("recruiter", "username email");
 
-        const totalJobs = await Job.countDocuments();
+        const totalJobs = await Job.countDocuments(filter);
         
         return res.status(200).json({
             totalJobs,

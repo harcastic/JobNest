@@ -1,0 +1,34 @@
+.auth-form {
+  width: 300px;
+  margin: 80px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+}
+
+.auth-form h2 {
+  text-align: center;
+}
+
+.auth-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.auth-form button {
+  padding: 10px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.auth-form button:hover {
+  opacity: 0.8;
+}

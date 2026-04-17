@@ -13,7 +13,7 @@ const uploadmyApplication = async(req, res)=>{
 
         const jobexists = await Job.findById(jobId);
         if(!jobexists){
-            return res.status(404).json({
+            return res.status(404).json({ 
                 message : "Job does not exist"
             });
         }
