@@ -7,7 +7,9 @@ const getJobsById = async(req, res) => {
     try {
         const { id } = req.params;
     
-        const job = await Job.findById(id).select("-password");
+        const job = await Job.findById(id)
+            .select("-password")
+            .populate("recruiter", "username email profileImage");
     
         if(!job){
             return res.status(404).json({

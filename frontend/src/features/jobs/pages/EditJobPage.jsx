@@ -252,6 +252,8 @@ const styles = {
     padding: "20px",
     maxWidth: "600px",
     margin: "0 auto",
+    background: "#FFFFFF",
+    minHeight: "100vh",
   },
   form: {
     display: "grid",
@@ -270,20 +272,24 @@ const styles = {
   },
   submitBtn: {
     padding: "10px 20px",
-    background: "#4CAF50",
+    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
     color: "white",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
     flex: 1,
+    boxShadow: "0 4px 12px rgba(27, 165, 165, 0.2)",
+    transition: "box-shadow 0.3s ease",
   },
   cancelBtn: {
     padding: "10px 20px",
-    background: "#ccc",
-    border: "none",
+    background: "#F5F6F7",
+    border: "1px solid #D9DDD4",
     borderRadius: "4px",
     cursor: "pointer",
     flex: 1,
+    color: "#333",
+    transition: "background 0.3s ease",
   },
 };
 

@@ -102,7 +102,7 @@ const styles = {
   },
   createBtn: {
     padding: "10px 20px",
-    background: "#4CAF50",
+    background: "linear-gradient(135deg, #92DBF3 0%, #CDECF3 100%)",
     color: "white",
     border: "none",
     borderRadius: "4px",
@@ -116,7 +116,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    border: "1px solid #ddd",
+    border: "1px solid #E1E7E0",
     padding: "15px",
     borderRadius: "8px",
   },
@@ -131,7 +131,7 @@ const styles = {
   },
   viewBtn: {
     padding: "8px 12px",
-    background: "#3498db",
+    background: "#92DBF3",
     color: "white",
     border: "none",
     borderRadius: "4px",

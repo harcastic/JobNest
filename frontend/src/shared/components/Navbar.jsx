@@ -189,11 +189,17 @@ const Navbar = () => {
 
   return (
     <>
+      <style>{`
+        .navbar-search-btn:hover {
+          background: linear-gradient(135deg, #0A5C63 0%, #003D40 100%) !important;
+          box-shadow: 0 6px 20px rgba(10, 92, 99, 0.5) !important;
+        }
+      `}</style>
       {/* Top Navigation Bar */}
       <nav style={styles.navbar}>
         <div style={styles.topContainer}>
           <div style={styles.logoSection} onClick={() => navigate("/jobs")}>
-            <div style={styles.logo}>Voo</div>
+            <div style={styles.logo}>Job Nest</div>
           </div>
 
           <div style={styles.navLinks}>
@@ -276,13 +282,13 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Search Bar Section - Only for Job Seekers */}
-      {userRole !== 'recruiter' && (
+      {/* Search Bar Section - Only for Job Seekers on Jobs Page */}
+      {userRole !== 'recruiter' && location.pathname === "/jobs" && (
         <div style={styles.searchSection}>
           <div style={styles.searchContainer}>
             <form style={styles.searchForm} onSubmit={handleSearch}>
               <div style={styles.searchInputWrapper}>
-                <span style={styles.searchIcon}>🔍</span>
+                <i className="fas fa-magnifying-glass" style={styles.searchIcon}></i>
                 <input
                   type="text"
                   placeholder="Job title or keyword"
@@ -293,7 +299,7 @@ const Navbar = () => {
               </div>
 
               <div style={styles.searchInputWrapper}>
-                <span style={styles.searchIcon}>📍</span>
+                <i className="fas fa-location-dot" style={styles.searchIcon}></i>
                 <input
                   type="text"
                   placeholder="Add country or city"
@@ -303,7 +309,7 @@ const Navbar = () => {
                 />
               </div>
 
-              <button type="submit" style={styles.searchButton}>
+              <button type="submit" style={styles.searchButton} className="navbar-search-btn">
                 Search
               </button>
             </form>
@@ -316,13 +322,14 @@ const Navbar = () => {
 
 const styles = {
   navbar: {
-    background: "#e8e8f0",
-    color: "#333",
+    background: "#FFFFFF",
+    color: "#2C3E50",
     padding: "12px 0",
-    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
+    boxShadow: "0 2px 12px rgba(27, 165, 165, 0.12)",
     position: "sticky",
     top: 0,
     zIndex: 100,
+    borderBottom: "2px solid #1BA5A5",
   },
   topContainer: {
     maxWidth: "1400px",
@@ -345,7 +352,7 @@ const styles = {
   logo: {
     fontSize: "28px",
     fontWeight: "bold",
-    color: "#4a5fff",
+    color: "#1BA5A5",
     width: "auto",
     display: "flex",
     alignItems: "center",
@@ -360,7 +367,7 @@ const styles = {
   },
   navLink: {
     background: "transparent",
-    color: "#666",
+    color: "#2C3E50",
     border: "none",
     cursor: "pointer",
     fontSize: "15px",
@@ -369,12 +376,12 @@ const styles = {
     transition: "color 0.3s ease, border-bottom 0.3s ease",
     borderBottom: "2px solid transparent",
     ":hover": {
-      color: "#333",
+      color: "#1BA5A5",
     },
   },
   activeLink: {
-    color: "#4a5fff",
-    borderBottom: "2px solid #4a5fff",
+    color: "#1BA5A5",
+    borderBottom: "2px solid #1BA5A5",
   },
   rightSection: {
     display: "flex",
@@ -403,7 +410,7 @@ const styles = {
     minWidth: "80px",
   },
   userName: {
-    color: "#333",
+    color: "#1F3A7D",
     fontSize: "13px",
     fontWeight: "600",
     whiteSpace: "nowrap",
@@ -424,7 +431,7 @@ const styles = {
     width: "40px",
     height: "40px",
     borderRadius: "50%",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -444,12 +451,13 @@ const styles = {
     top: "50px",
     right: 0,
     background: "white",
-    color: "#333",
+    color: "#2C3E50",
     borderRadius: "8px",
-    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
+    boxShadow: "0 8px 24px rgba(27, 165, 165, 0.15)",
     minWidth: "200px",
     zIndex: 1000,
     overflow: "hidden",
+    border: "1px solid #D9DDD4",
   },
   dropdownItem: {
     display: "block",
@@ -459,13 +467,13 @@ const styles = {
     background: "transparent",
     cursor: "pointer",
     fontSize: "14px",
-    color: "#333",
+    color: "#2C3E50",
     textAlign: "left",
     transition: "background 0.2s ease",
   },
   divider: {
     height: "1px",
-    background: "#e0e0e0",
+    background: "#D9DDD4",
     margin: "4px 0",
   },
   logoutItem: {
@@ -474,9 +482,9 @@ const styles = {
   },
   // Search Section Styles
   searchSection: {
-    background: "#e8e8f0",
-    borderTop: "1px solid #d0d0d8",
-    borderBottom: "1px solid #d0d0d8",
+    background: "#FFFFFF",
+    borderTop: "1px solid #D9DDD4",
+    borderBottom: "1px solid #D9DDD4",
     padding: "24px 0",
     position: "sticky",
     top: 70,
@@ -502,14 +510,15 @@ const styles = {
     background: "white",
     borderRadius: "8px",
     overflow: "hidden",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+    boxShadow: "0 2px 8px rgba(27, 165, 165, 0.1)",
+    border: "2px solid #1BA5A5",
   },
   searchIcon: {
     position: "absolute",
     left: "14px",
     fontSize: "18px",
     pointerEvents: "none",
-    color: "#999",
+    color: "#1BA5A5",
   },
   searchInput: {
     width: "100%",
@@ -522,7 +531,7 @@ const styles = {
     transition: "background 0.3s ease",
   },
   searchButton: {
-    background: "linear-gradient(135deg, #5b7bff 0%, #4a5fff 100%)",
+    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
     color: "white",
     border: "none",
     padding: "14px 40px",
@@ -532,7 +541,7 @@ const styles = {
     cursor: "pointer",
     transition: "transform 0.3s ease, box-shadow 0.3s ease",
     whiteSpace: "nowrap",
-    boxShadow: "0 4px 15px rgba(91, 123, 255, 0.3)",
+    boxShadow: "0 4px 15px rgba(27, 165, 165, 0.3)",
   },
   disabledButton: {
     opacity: 0.6,

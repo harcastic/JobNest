@@ -199,172 +199,179 @@ const JobsPage = () => {
   }
 
   return (
-    <div style={{
-      ...styles.pageWrapper,
-      gridTemplateColumns: windowWidth < 1024 ? "1fr" : "280px 1fr",
-      gap: windowWidth < 1024 ? "0" : "30px",
-    }}>
-      {/* Left Sidebar - Filters */}
-      <div style={{
-        ...styles.sidebar,
-        display: windowWidth < 1024 ? "none" : "block",
-      }}>
-        <div style={styles.filterSection}>
-          <div style={styles.filterHeader}>
-            <h3 style={styles.filterTitle}>Job Type</h3>
-            <button onClick={handleClearAllFilters} style={styles.clearAllBtn}>
-              Clear all
-            </button>
-          </div>
-
-          <div style={styles.filterGroup}>
-            <label style={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={jobType.fullTime}
-                onChange={() => handleJobTypeChange("fullTime")}
-              />
-              Full time
-            </label>
-            <label style={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={jobType.partTime}
-                onChange={() => handleJobTypeChange("partTime")}
-              />
-              Part time
-            </label>
-            <label style={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={jobType.internship}
-                onChange={() => handleJobTypeChange("internship")}
-              />
-              Internship
-            </label>
-          </div>
+    <div style={styles.outerContainer}>
+      {/* Full-width header with title and sort */}
+      <div style={styles.headerSection}>
+        <div>
+          <h1 style={styles.pageTitle}>Recommended jobs</h1>
+          {hasFilters && (
+            <p style={styles.filterInfo}>
+              Showing results {title && `for "${title}"`} {location && `in ${location}`}
+              <button 
+                onClick={clearFilters} 
+                style={styles.clearBtn}
+              >
+                Clear Filters
+              </button>
+            </p>
+          )}
         </div>
-
-        {/* Salary Range */}
-        <div style={styles.filterSection}>
-          <h3 style={styles.filterTitle}>Salary Range</h3>
-          <div style={styles.sliderContainer}>
-            <input
-              type="range"
-              min="0"
-              max="200"
-              value={salaryRange[0]}
-              onChange={(e) => handleSalaryRangeChange([parseInt(e.target.value), salaryRange[1]])}
-              style={styles.slider}
-            />
-            <input
-              type="range"
-              min="0"
-              max="200"
-              value={salaryRange[1]}
-              onChange={(e) => handleSalaryRangeChange([salaryRange[0], parseInt(e.target.value)])}
-              style={styles.slider}
-            />
-          </div>
-          <div style={styles.salaryDisplay}>
-            <span>${salaryRange[0]}k</span>
-            <span>${salaryRange[1]}k</span>
-          </div>
-        </div>
-
-        {/* Experience Level */}
-        <div style={styles.filterSection}>
-          <h3 style={styles.filterTitle}>Experience Level</h3>
-          <div style={styles.filterGroup}>
-            <label style={styles.checkboxLabelWithCount}>
-              <input
-                type="checkbox"
-                checked={experienceLevel.entryLevel}
-                onChange={() => handleExperienceLevelChange("entryLevel")}
-              />
-              <span>Entry level</span>
-              <span style={styles.jobCount}>392</span>
-            </label>
-            <label style={styles.checkboxLabelWithCount}>
-              <input
-                type="checkbox"
-                checked={experienceLevel.intermediate}
-                onChange={() => handleExperienceLevelChange("intermediate")}
-              />
-              <span>Intermediate</span>
-              <span style={styles.jobCount}>124</span>
-            </label>
-            <label style={styles.checkboxLabelWithCount}>
-              <input
-                type="checkbox"
-                checked={experienceLevel.expert}
-                onChange={() => handleExperienceLevelChange("expert")}
-              />
-              <span>Expert</span>
-              <span style={styles.jobCount}>3921</span>
-            </label>
-          </div>
-        </div>
+        <button style={styles.sortButton}>
+          🔀 Most recent
+        </button>
       </div>
 
-      {/* Main Content */}
-      <div style={styles.mainContent}>
-        <div style={styles.container}>
-          <div style={styles.header}>
-            <div>
-              <h1>Available Jobs</h1>
-              {hasFilters && (
-                <p style={styles.filterInfo}>
-                  Showing results {title && `for "${title}"`} {location && `in ${location}`}
-                  <button 
-                    onClick={clearFilters} 
-                    style={styles.clearBtn}
-                  >
-                    Clear Filters
-                  </button>
-                </p>
-              )}
+      {/* Grid with sidebar and main content */}
+      <div style={{
+        ...styles.pageWrapper,
+        gridTemplateColumns: windowWidth < 1024 ? "1fr" : "280px 1fr",
+        gap: windowWidth < 1024 ? "0" : "30px",
+      }}>
+        {/* Left Sidebar - Filters */}
+        <div style={{
+          ...styles.sidebar,
+          display: windowWidth < 1024 ? "none" : "block",
+        }}>
+          <div style={styles.filterSection}>
+            <div style={styles.filterHeader}>
+              <h3 style={styles.filterTitle}>Job Type</h3>
+              <button onClick={handleClearAllFilters} style={styles.clearAllBtn}>
+                Clear all
+              </button>
+            </div>
+
+            <div style={styles.filterGroup}>
+              <label style={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={jobType.fullTime}
+                  onChange={() => handleJobTypeChange("fullTime")}
+                />
+                Full time
+              </label>
+              <label style={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={jobType.partTime}
+                  onChange={() => handleJobTypeChange("partTime")}
+                />
+                Part time
+              </label>
+              <label style={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={jobType.internship}
+                  onChange={() => handleJobTypeChange("internship")}
+                />
+                Internship
+              </label>
             </div>
           </div>
 
-          {filteredJobs && filteredJobs.length > 0 ? (
-            <>
-              <JobList jobs={filteredJobs} />
-              {totalPages > 1 && (
-                <div style={styles.pagination}>
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    style={{
-                      ...styles.paginationBtn,
-                      ...(currentPage === 1 ? styles.paginationBtnDisabled : {}),
-                    }}
-                  >
-                    ← Previous
-                  </button>
-                  
-                  <span style={styles.pageInfo}>
-                    Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
-                  </span>
-                  
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    style={{
-                      ...styles.paginationBtn,
-                      ...(currentPage === totalPages ? styles.paginationBtnDisabled : {}),
-                    }}
-                  >
-                    Next →
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <p style={styles.noJobsText}>
-              {hasFilters ? "No jobs found matching your filters." : "No jobs available at the moment."}
-            </p>
-          )}
+          {/* Salary Range */}
+          <div style={styles.filterSection}>
+            <h3 style={styles.filterTitle}>Salary Range</h3>
+            <div style={styles.sliderContainer}>
+              <input
+                type="range"
+                min="0"
+                max="200"
+                value={salaryRange[0]}
+                onChange={(e) => handleSalaryRangeChange([parseInt(e.target.value), salaryRange[1]])}
+                style={styles.slider}
+              />
+              <input
+                type="range"
+                min="0"
+                max="200"
+                value={salaryRange[1]}
+                onChange={(e) => handleSalaryRangeChange([salaryRange[0], parseInt(e.target.value)])}
+                style={styles.slider}
+              />
+            </div>
+            <div style={styles.salaryDisplay}>
+              <span>${salaryRange[0]}k</span>
+              <span>${salaryRange[1]}k</span>
+            </div>
+          </div>
+
+          {/* Experience Level */}
+          <div style={styles.filterSection}>
+            <h3 style={styles.filterTitle}>Experience Level</h3>
+            <div style={styles.filterGroup}>
+              <label style={styles.checkboxLabelWithCount}>
+                <input
+                  type="checkbox"
+                  checked={experienceLevel.entryLevel}
+                  onChange={() => handleExperienceLevelChange("entryLevel")}
+                />
+                <span>Entry level</span>
+                <span style={styles.jobCount}>392</span>
+              </label>
+              <label style={styles.checkboxLabelWithCount}>
+                <input
+                  type="checkbox"
+                  checked={experienceLevel.intermediate}
+                  onChange={() => handleExperienceLevelChange("intermediate")}
+                />
+                <span>Intermediate</span>
+                <span style={styles.jobCount}>124</span>
+              </label>
+              <label style={styles.checkboxLabelWithCount}>
+                <input
+                  type="checkbox"
+                  checked={experienceLevel.expert}
+                  onChange={() => handleExperienceLevelChange("expert")}
+                />
+                <span>Expert</span>
+                <span style={styles.jobCount}>3921</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div style={styles.mainContent}>
+          <div style={styles.container}>
+            {filteredJobs && filteredJobs.length > 0 ? (
+              <>
+                <JobList jobs={filteredJobs} />
+                {totalPages > 1 && (
+                  <div style={styles.pagination}>
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      style={{
+                        ...styles.paginationBtn,
+                        ...(currentPage === 1 ? styles.paginationBtnDisabled : {}),
+                      }}
+                    >
+                      ← Previous
+                    </button>
+                    
+                    <span style={styles.pageInfo}>
+                      Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+                    </span>
+                    
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      style={{
+                        ...styles.paginationBtn,
+                        ...(currentPage === totalPages ? styles.paginationBtnDisabled : {}),
+                      }}
+                    >
+                      Next →
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p style={styles.noJobsText}>
+                {hasFilters ? "No jobs found matching your filters." : "No jobs available at the moment."}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -372,30 +379,47 @@ const JobsPage = () => {
 };
 
 const styles = {
+  outerContainer: {
+    padding: "20px",
+    maxWidth: "1400px",
+    margin: "0 auto",
+    background: "#FFFFFF",
+    minHeight: "100vh",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+  headerSection: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: "30px",
+    gap: "20px",
+  },
   pageWrapper: {
     display: "grid",
     gridTemplateColumns: "280px 1fr",
     gap: "30px",
-    padding: "20px",
-    maxWidth: "1400px",
-    margin: "0 auto",
     width: "100%",
     boxSizing: "border-box",
     minWidth: 0,
   },
   sidebar: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#F5F6F7",
     padding: "20px",
     borderRadius: "8px",
     height: "fit-content",
     position: "sticky",
-    top: "100px",
+    top: "180px",
     minWidth: 0,
+    border: "1px solid #D9DDD4",
+    zIndex: 50,
+    maxHeight: "calc(100vh - 200px)",
+    overflowY: "auto",
   },
   filterSection: {
     marginBottom: "30px",
     paddingBottom: "20px",
-    borderBottom: "1px solid #e0e0e0",
+    borderBottom: "1px solid #D9DDD4",
   },
   filterHeader: {
     display: "flex",
@@ -405,9 +429,9 @@ const styles = {
   },
   filterTitle: {
     fontSize: "16px",
-    fontWeight: "600",
-    color: "#333",
-    margin: "0 0 12px 0",
+    fontWeight: "700",
+    color: "#1F3A7D",
+    margin: "0",
   },
   clearAllBtn: {
     background: "none",
@@ -427,29 +451,34 @@ const styles = {
   checkboxLabel: {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "10px",
     cursor: "pointer",
     fontSize: "14px",
-    color: "#666",
+    color: "#333",
+    padding: "8px 0",
   },
   checkboxLabelWithCount: {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "10px",
     cursor: "pointer",
     fontSize: "14px",
-    color: "#666",
+    color: "#333",
     justifyContent: "space-between",
+    padding: "8px 0",
   },
   jobCount: {
     color: "#999",
-    fontSize: "13px",
+    fontSize: "12px",
     marginLeft: "auto",
+    fontWeight: "500",
   },
   sliderContainer: {
     position: "relative",
-    marginBottom: "12px",
-    height: "5px",
+    marginBottom: "16px",
+    height: "6px",
+    background: "#D9DDD4",
+    borderRadius: "3px",
   },
   slider: {
     position: "absolute",
@@ -467,8 +496,9 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     fontSize: "13px",
-    color: "#666",
-    marginTop: "10px",
+    color: "#333",
+    marginTop: "12px",
+    fontWeight: "500",
   },
   mainContent: {
     flex: 1,
@@ -480,8 +510,25 @@ const styles = {
     boxSizing: "border-box",
     overflow: "hidden",
   },
-  header: {
-    marginBottom: "30px",
+  pageTitle: {
+    fontSize: "28px",
+    fontWeight: "700",
+    color: "#1F3A7D",
+    margin: "0 0 10px 0",
+  },
+  sortButton: {
+    padding: "10px 20px",
+    background: "#FFFFFF",
+    border: "2px solid #1BA5A5",
+    borderRadius: "8px",
+    fontSize: "14px",
+    fontWeight: "600",
+    cursor: "pointer",
+    color: "#1BA5A5",
+    transition: "border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease",
+    whiteSpace: "nowrap",
+    height: "fit-content",
+    boxShadow: "0 2px 8px rgba(27, 165, 165, 0.15)",
   },
   filterInfo: {
     fontSize: "14px",
@@ -524,20 +571,21 @@ const styles = {
     gap: "20px",
     padding: "30px 20px",
     marginTop: "40px",
-    borderTop: "1px solid #e0e0e0",
+    borderTop: "1px solid #D9DDD4",
   },
   paginationBtn: {
     padding: "10px 20px",
-    background: "#1976d2",
+    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
     color: "white",
     border: "none",
     borderRadius: "6px",
     cursor: "pointer",
     fontSize: "14px",
     fontWeight: "600",
-    transition: "background 0.3s ease, transform 0.2s ease",
+    transition: "box-shadow 0.3s ease, transform 0.2s ease",
+    boxShadow: "0 4px 12px rgba(27, 165, 165, 0.3)",
     ":hover": {
-      background: "#1565c0",
+      boxShadow: "0 6px 16px rgba(27, 165, 165, 0.4)",
       transform: "translateY(-2px)",
     },
   },

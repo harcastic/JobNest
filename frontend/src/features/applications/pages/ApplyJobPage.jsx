@@ -313,12 +313,12 @@ const styles = {
     padding: "8px 16px",
     marginBottom: "20px",
     cursor: "pointer",
-    background: "#f0f0f0",
-    border: "1px solid #ddd",
+    background: "#F5F6F7",
+    border: "1px solid #D9DDD4",
     borderRadius: "4px",
   },
   formCard: {
-    border: "1px solid #ddd",
+    border: "1px solid #D9DDD4",
     padding: "30px",
     borderRadius: "8px",
     background: "white",
@@ -335,14 +335,14 @@ const styles = {
     marginTop: "20px",
   },
   fieldset: {
-    border: "1px solid #eee",
+    border: "1px solid #D9DDD4",
     padding: "15px",
     borderRadius: "4px",
   },
   legend: {
     fontSize: "14px",
     fontWeight: "bold",
-    color: "#667eea",
+    color: "#1BA5A5",
     padding: "0 10px",
   },
   row: {
@@ -357,14 +357,14 @@ const styles = {
   },
   input: {
     padding: "10px",
-    border: "1px solid #ddd",
+    border: "1px solid #D9DDD4",
     borderRadius: "4px",
     fontSize: "14px",
     fontFamily: "inherit",
   },
   textarea: {
     padding: "10px",
-    border: "1px solid #ddd",
+    border: "1px solid #D9DDD4",
     borderRadius: "4px",
     fontSize: "14px",
     fontFamily: "inherit",
@@ -404,7 +404,7 @@ const styles = {
   },
   submitBtn: {
     padding: "12px 20px",
-    background: "#4CAF50",
+    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
     color: "white",
     border: "none",
     borderRadius: "4px",
@@ -414,7 +414,7 @@ const styles = {
   },
   cancelBtn: {
     padding: "12px 20px",
-    background: "#ccc",
+    background: "#D9DDD4",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",

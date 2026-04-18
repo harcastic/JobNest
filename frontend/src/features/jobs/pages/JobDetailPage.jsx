@@ -54,8 +54,29 @@ const JobDetailPage = () => {
   const isMobile = windowWidth < 768;
 
   return (
-    <div style={{...styles.container, ...getResponsiveContainerStyle(windowWidth)}}>
-      <button onClick={() => navigate("/jobs")} style={styles.backBtn}>
+    <>
+      <style>{`
+        .job-back-btn:hover {
+          background: #f0f0f0;
+        }
+        .job-save-btn:hover {
+          opacity: 0.7;
+        }
+        .job-apply-btn:hover {
+          background: linear-gradient(135deg, #0D7A86 0%, #064A52 100%);
+          box-shadow: 0 6px 16px rgba(27, 165, 165, 0.35);
+        }
+        .job-apply-btn:disabled:hover {
+          background: #ccc;
+          box-shadow: none;
+          cursor: not-allowed;
+        }
+        .job-see-more-btn:hover {
+          color: #0D7A86;
+        }
+      `}</style>
+      <div style={{...styles.container, ...getResponsiveContainerStyle(windowWidth)}}>
+        <button onClick={() => navigate("/jobs")} style={styles.backBtn} className="job-back-btn">
         ← Back to Jobs
       </button>
 
@@ -63,13 +84,24 @@ const JobDetailPage = () => {
       <div style={{...styles.headerSection, ...getResponsiveHeaderStyle(windowWidth)}}>
         <div style={{...styles.headerTop, ...getResponsiveHeaderTop(windowWidth)}}>
           <div style={styles.logoCompanySection}>
-            <div style={styles.companyLogo}>{job.companyName.substring(0, 2)}</div>
+            <div style={styles.companyLogo}>
+              {job.recruiter?.profileImage ? (
+                <img 
+                  src={job.recruiter.profileImage}
+                  alt={job.recruiter.username || "Recruiter"}
+                  style={styles.companyLogoImage}
+                />
+              ) : (
+                job.companyName.substring(0, 2)
+              )}
+            </div>
           </div>
           <div style={{...styles.headerActions, ...getResponsiveHeaderActions(windowWidth)}}>
             <button 
               style={{...styles.saveBtn, color: isSaved ? "#1976d2" : "#999"}}
               onClick={() => setIsSaved(!isSaved)}
               title="Save"
+              className="job-save-btn"
             >
               ♡
             </button>
@@ -78,11 +110,12 @@ const JobDetailPage = () => {
                 style={{...styles.applyBtn, ...styles.disabledApplyBtn, cursor: 'not-allowed'}} 
                 disabled
                 title="Recruiters cannot apply to jobs"
+                className="job-apply-btn"
               >
                 Apply
               </button>
             ) : (
-              <button style={styles.applyBtn} onClick={() => navigate("/apply/" + id)}>
+              <button style={styles.applyBtn} onClick={() => navigate("/apply/" + id)} className="job-apply-btn">
                 Apply
               </button>
             )}
@@ -131,6 +164,7 @@ const JobDetailPage = () => {
               <button 
                 style={styles.seeMoreBtn}
                 onClick={() => setExpandedResponsibilities(!expandedResponsibilities)}
+                className="job-see-more-btn"
               >
                 {expandedResponsibilities ? "See less" : "See more"}
               </button>
@@ -161,8 +195,13 @@ const JobDetailPage = () => {
           {/* Salary */}
           {job.salary && (
             <div style={styles.sidebarCard}>
-              <h3 style={styles.sidebarTitle}>Salary</h3>
-              <p style={styles.salaryText}>${job.salary}k/year</p>
+              <h3 style={styles.sidebarTitle}>
+                <i className="fas fa-money-bill-wave" style={{ marginRight: "8px" }}></i>
+                Salary
+              </h3>
+              <p style={styles.salaryText}>
+                ${job.salary}k/year
+              </p>
             </div>
           )}
 
@@ -203,16 +242,26 @@ const JobDetailPage = () => {
           {/* Company Card */}
           <div style={styles.sidebarCard}>
             <div style={styles.companyCardContent}>
-              <div style={styles.companyCardLogo}>{job.companyName.substring(0, 2)}</div>
+              <div style={styles.companyCardLogo}>
+                {job.recruiter?.profileImage ? (
+                  <img 
+                    src={job.recruiter.profileImage}
+                    alt={job.recruiter.username || "Recruiter"}
+                    style={styles.companyCardLogoImage}
+                  />
+                ) : (
+                  job.companyName.substring(0, 2)
+                )}
+              </div>
               <h3 style={styles.companyCardName}>{job.companyName}</h3>
               <p style={styles.companyFollowers}>14,000,752 followers</p>
             </div>
           </div>
 
-
         </div>
       </div>
     </div>
+    </>
   );
 };
 
@@ -221,7 +270,7 @@ const styles = {
     padding: "20px",
     maxWidth: "1200px",
     margin: "0 auto",
-    background: "#f5f7fa",
+    background: "#FFFFFF",
     minHeight: "100vh",
     boxSizing: "border-box",
     width: "100%",
@@ -231,7 +280,7 @@ const styles = {
     marginBottom: "20px",
     cursor: "pointer",
     background: "white",
-    border: "1px solid #ddd",
+    border: "1px solid #D9DDD4",
     borderRadius: "6px",
     fontSize: "14px",
     fontWeight: "500",
@@ -246,7 +295,8 @@ const styles = {
     borderRadius: "8px",
     padding: "24px",
     marginBottom: "20px",
-    boxShadow: "0 1px 4px rgba(0, 0, 0, 0.08)",
+    boxShadow: "0 1px 4px rgba(27, 165, 165, 0.1)",
+    border: "1px solid #D9DDD4",
     width: "100%",
     boxSizing: "border-box",
   },
@@ -268,7 +318,7 @@ const styles = {
     width: "64px",
     height: "64px",
     borderRadius: "8px",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -276,6 +326,13 @@ const styles = {
     fontWeight: "bold",
     fontSize: "18px",
     flexShrink: 0,
+    overflow: "hidden",
+  },
+  companyLogoImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    borderRadius: "8px",
   },
   headerActions: {
     display: "flex",
@@ -292,7 +349,7 @@ const styles = {
     transition: "color 0.3s ease",
   },
   applyBtn: {
-    background: "#1976d2",
+    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
     color: "white",
     border: "none",
     padding: "10px 24px",
@@ -300,8 +357,9 @@ const styles = {
     fontSize: "15px",
     fontWeight: "600",
     cursor: "pointer",
-    transition: "background 0.3s ease",
+    transition: "box-shadow 0.3s ease",
     whiteSpace: "nowrap",
+    boxShadow: "0 4px 12px rgba(27, 165, 165, 0.2)",
   },
   disabledApplyBtn: {
     background: "#ccc",
@@ -349,7 +407,8 @@ const styles = {
     background: "white",
     borderRadius: "8px",
     padding: "20px",
-    boxShadow: "0 1px 4px rgba(0, 0, 0, 0.08)",
+    boxShadow: "0 1px 4px rgba(27, 165, 165, 0.1)",
+    border: "1px solid #D9DDD4",
     overflowX: "auto",
     wordWrap: "break-word",
     overflowWrap: "break-word",
@@ -387,7 +446,7 @@ const styles = {
   },
   seeMoreBtn: {
     background: "transparent",
-    color: "#1976d2",
+    color: "#1BA5A5",
     border: "none",
     padding: "8px 0",
     cursor: "pointer",
@@ -402,8 +461,8 @@ const styles = {
     minWidth: 0,
   },
   skillBadge: {
-    background: "#e8f0fe",
-    color: "#1976d2",
+    background: "#D4F3F3",
+    color: "#0D7A86",
     padding: "6px 12px",
     borderRadius: "16px",
     fontSize: "13px",
@@ -416,7 +475,8 @@ const styles = {
     background: "white",
     borderRadius: "8px",
     padding: "16px",
-    boxShadow: "0 1px 4px rgba(0, 0, 0, 0.08)",
+    boxShadow: "0 1px 4px rgba(27, 165, 165, 0.1)",
+    border: "1px solid #D9DDD4",
     wordWrap: "break-word",
     overflowWrap: "break-word",
   },
@@ -426,12 +486,14 @@ const styles = {
     fontWeight: "600",
     color: "#1a1a1a",
     wordWrap: "break-word",
+    display: "inline-flex",
+    alignItems: "center",
   },
   salaryText: {
     margin: "0",
     fontSize: "18px",
     fontWeight: "700",
-    color: "#1976d2",
+    color: "#1BA5A5",
     wordWrap: "break-word",
   },
   contactItem: {
@@ -497,6 +559,13 @@ const styles = {
     fontSize: "14px",
     margin: "0 auto 12px",
     flexShrink: 0,
+    overflow: "hidden",
+  },
+  companyCardLogoImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    borderRadius: "6px",
   },
   companyCardName: {
     margin: "0 0 6px 0",

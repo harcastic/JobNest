@@ -51,7 +51,7 @@ const JobList = ({ jobs }) => {
 const styles = {
   container: {
     display: "grid",
-    padding: "20px 0",
+    padding: "0",
     width: "100%",
     boxSizing: "border-box",
     autoRows: "1fr",

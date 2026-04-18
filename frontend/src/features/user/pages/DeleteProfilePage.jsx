@@ -102,8 +102,8 @@ const styles = {
     padding: "8px 16px",
     marginBottom: "20px",
     cursor: "pointer",
-    background: "#f0f0f0",
-    border: "1px solid #ddd",
+    background: "#F5F6F7",
+    border: "1px solid #D9DDD4",
     borderRadius: "4px",
   },
   alertCard: {
@@ -155,7 +155,7 @@ const styles = {
     padding: "15px",
     background: "white",
     borderRadius: "4px",
-    border: "1px solid #ddd",
+    border: "1px solid #D9DDD4",
   },
   checkbox: {
     marginTop: "5px",
@@ -191,8 +191,8 @@ const styles = {
   },
   cancelBtn: {
     padding: "12px 20px",
-    background: "#f0f0f0",
-    border: "1px solid #ddd",
+    background: "#F5F6F7",
+    border: "1px solid #D9DDD4",
     borderRadius: "4px",
     cursor: "pointer",
     flex: 1,

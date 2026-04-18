@@ -5,30 +5,41 @@
   flex-direction: column;
   gap: 12px;
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #D9DDD4;
   border-radius: 8px;
   background: white;
 }
 
 .auth-form h2 {
   text-align: center;
+  color: #1F3A7D;
 }
 
 .auth-form input {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #D9DDD4;
   border-radius: 6px;
+  background: #F5F6F7;
+  transition: border-color 0.3s ease;
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: #1BA5A5;
+  background: white;
 }
 
 .auth-form button {
   padding: 10px;
-  background: black;
+  background: linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%);
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(27, 165, 165, 0.2);
 }
 
 .auth-form button:hover {
-  opacity: 0.8;
+  box-shadow: 0 6px 16px rgba(146, 219, 243, 0.3);
 }

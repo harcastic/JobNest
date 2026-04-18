@@ -41,7 +41,15 @@ const JobCard = ({ job, applicantsCount = 0 }) => {
         <div style={styles.header}>
           <div style={styles.logoContainer}>
             <div style={styles.logo}>
-              {job.companyName.charAt(0).toUpperCase()}
+              {job.recruiter?.profileImage ? (
+                <img 
+                  src={job.recruiter.profileImage} 
+                  alt={job.recruiter.username || "Recruiter"}
+                  style={styles.logoImage}
+                />
+              ) : (
+                job.companyName.charAt(0).toUpperCase()
+              )}
             </div>
           </div>
           <button
@@ -99,15 +107,16 @@ const JobCard = ({ job, applicantsCount = 0 }) => {
 
 const styles = {
   card: {
-    backgroundColor: "#fff",
-    border: "1px solid #e0e0e0",
+    backgroundColor: "#ffffff",
+    border: "1px solid #D9DDD4",
     borderRadius: "12px",
-    padding: "16px",
+    padding: "20px",
     cursor: "pointer",
     transition: "box-shadow 0.3s ease, transform 0.3s ease",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
     ":hover": {
-      boxShadow: "0 4px 16px rgba(0, 0, 0, 0.12)",
+      boxShadow: "0 8px 24px rgba(27, 165, 165, 0.2)",
+      transform: "translateY(-2px)",
     },
     width: "100%",
     maxWidth: "100%",
@@ -134,7 +143,7 @@ const styles = {
     width: "48px",
     height: "48px",
     borderRadius: "8px",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -142,6 +151,13 @@ const styles = {
     fontWeight: "bold",
     fontSize: "20px",
     flexShrink: 0,
+    overflow: "hidden",
+  },
+  logoImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    borderRadius: "8px",
   },
   saveButton: {
     background: "none",
@@ -161,7 +177,7 @@ const styles = {
     margin: "0 0 4px 0",
     fontSize: "18px",
     fontWeight: "600",
-    color: "#1a1a1a",
+    color: "#1F3A7D",
     wordWrap: "break-word",
     overflowWrap: "break-word",
     overflow: "hidden",
@@ -214,7 +230,7 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     paddingTop: "12px",
-    borderTop: "1px solid #f0f0f0",
+    borderTop: "1px solid #D9DDD4",
     gap: "8px",
     marginTop: "auto",
     minWidth: 0,
@@ -222,7 +238,7 @@ const styles = {
   salary: {
     fontSize: "18px",
     fontWeight: "700",
-    color: "#1a1a1a",
+    color: "#1BA5A5",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -240,16 +256,19 @@ const styles = {
 // Add dynamic tag colors
 const tagStyles = `
   .entry-level {
-    background: #f0e8ff !important;
-    color: #7c3aed !important;
+    background: #D4F3F3 !important;
+    color: #0D7A86 !important;
+    font-weight: 600;
   }
   .full-time {
-    background: #dcfce7 !important;
-    color: #16a34a !important;
+    background: #D9F5D9 !important;
+    color: #1B5E20 !important;
+    font-weight: 600;
   }
   .timing {
-    background: #fed7aa !important;
-    color: #d97706 !important;
+    background: #FFF3E0 !important;
+    color: #E65100 !important;
+    font-weight: 600;
   }
 `;
 

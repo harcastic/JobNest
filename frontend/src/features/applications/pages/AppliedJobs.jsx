@@ -75,10 +75,16 @@ const AppliedJobs = () => {
   }
 
   return (
-    <div style={styles.container}>
+    <>
+      <style>{`
+        .browse-jobs-btn:hover {
+          background: #0A5C63 !important;
+        }
+      `}</style>
+      <div style={styles.container}>
       <div style={styles.header}>
         <h1>My Applications</h1>
-        <button onClick={() => navigate("/jobs")} style={styles.browseBtn}>
+        <button onClick={() => navigate("/jobs")} style={styles.browseBtn} className="browse-jobs-btn">
           Browse Jobs
         </button>
       </div>
@@ -137,6 +143,7 @@ const AppliedJobs = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
@@ -172,7 +179,7 @@ const styles = {
   },
   browseBtn: {
     padding: "10px 20px",
-    background: "#3498db",
+    background: "#1BA5A5",
     color: "white",
     border: "none",
     borderRadius: "4px",
@@ -190,7 +197,7 @@ const styles = {
   noApplications: {
     textAlign: "center",
     padding: "40px",
-    border: "1px solid #ddd",
+    border: "1px solid #D9DDD4",
     borderRadius: "8px",
   },
   applicationsList: {
@@ -201,7 +208,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    border: "1px solid #ddd",
+    border: "1px solid #D9DDD4",
     padding: "15px",
     borderRadius: "8px",
     cursor: "pointer",

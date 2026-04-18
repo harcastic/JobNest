@@ -66,7 +66,7 @@ const getAllJobs = async (req, res) =>{
             .sort({createdAt: -1})
             .skip(skip)
             .limit(limit)
-            .populate("recruiter", "username email");
+            .populate("recruiter", "username email profileImage");
 
         const totalJobs = await Job.countDocuments(filter);
         

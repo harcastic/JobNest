@@ -137,14 +137,23 @@ const ApplicationDetailPage = () => {
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <button onClick={() => navigate("/applications")} style={styles.backBtn}>
-          ← Back to Applications
-        </button>
+    <>
+      <style>{`
+        .app-back-btn:hover {
+          background: #7f8c8d !important;
+        }
+        .app-edit-btn:hover {
+          background: #0A5C63 !important;
+        }
+      `}</style>
+      <div style={styles.container}>
+        <div style={styles.header}>
+          <button onClick={() => navigate("/applications")} style={styles.backBtn} className="app-back-btn">
+            ← Back to Applications
+          </button>
         <h1>Application Details</h1>
         {!isEditing && canUpdate && (
-          <button onClick={() => setIsEditing(true)} style={styles.editBtn}>
+          <button onClick={() => setIsEditing(true)} style={styles.editBtn} className="app-edit-btn">
             Edit Application
           </button>
         )}
@@ -343,6 +352,7 @@ const ApplicationDetailPage = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
@@ -408,7 +418,7 @@ const styles = {
   },
   editBtn: {
     padding: "10px 20px",
-    background: "#3498db",
+    background: "#1BA5A5",
     color: "white",
     border: "none",
     borderRadius: "4px",
@@ -434,7 +444,7 @@ const styles = {
   section: {
     marginBottom: "30px",
     padding: "20px",
-    background: "#f5f5f5",
+    background: "#F5F6F7",
     borderRadius: "8px",
   },
   jobInfo: {
@@ -493,7 +503,7 @@ const styles = {
     gridTemplateColumns: "200px 1fr",
     gap: "15px",
     paddingBottom: "12px",
-    borderBottom: "1px solid #e0e0e0",
+    borderBottom: "1px solid #D9DDD4",
   },
   detailLabel: {
     fontWeight: "bold",
@@ -504,7 +514,7 @@ const styles = {
     wordBreak: "break-word",
   },
   link: {
-    color: "#3498db",
+    color: "#1BA5A5",
     textDecoration: "none",
   },
   form: {
@@ -533,7 +543,7 @@ const styles = {
   },
   submitBtn: {
     padding: "12px 20px",
-    background: "#27ae60",
+    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
     color: "white",
     border: "none",
     borderRadius: "4px",
