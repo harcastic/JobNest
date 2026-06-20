@@ -15,7 +15,7 @@ services:
         value: 10000
 
       # 🔐 JWT
-      - key: JWT_SECRET
+      - key: TOKEN_SECRET_KEY
         sync: false
 
       # ☁️ Cloudinary
