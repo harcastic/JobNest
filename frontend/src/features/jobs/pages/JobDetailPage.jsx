@@ -115,7 +115,19 @@ const JobDetailPage = () => {
                 Apply
               </button>
             ) : (
-              <button style={styles.applyBtn} onClick={() => navigate("/apply/" + id)} className="job-apply-btn">
+              <button
+                style={styles.applyBtn}
+                onClick={() => {
+                  const token = localStorage.getItem("token");
+                  if (!token) {
+                    alert("Please sign in or create an account to apply for jobs!");
+                    navigate("/login");
+                  } else {
+                    navigate("/apply/" + id);
+                  }
+                }}
+                className="job-apply-btn"
+              >
                 Apply
               </button>
             )}

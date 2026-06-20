@@ -42,7 +42,7 @@ const ApplicationDetailPage = () => {
           
           if (now > deadline) {
             setCanUpdate(false);
-            setDeadlineMessage(`Application deadline passed on ${deadline.toLocaleDateString()}`);
+            setDeadlineMessage(`Deadline passed on ${deadline.toLocaleDateString()}`);
           } else {
             setDeadlineMessage(`Application deadline: ${deadline.toLocaleDateString()}`);
           }
@@ -120,7 +120,7 @@ const ApplicationDetailPage = () => {
       <div style={styles.container}>
         <div style={styles.errorBox}>
           <p style={styles.errorText}>{error}</p>
-          <button onClick={() => navigate("/applications")} style={styles.backBtn}>
+          <button onClick={() => navigate("/applications")} style={styles.backBtn} className="app-back-btn">
             Back to Applications
           </button>
         </div>
@@ -139,219 +139,319 @@ const ApplicationDetailPage = () => {
   return (
     <>
       <style>{`
+        .app-back-btn {
+          transition: all 0.25s ease !important;
+        }
         .app-back-btn:hover {
-          background: #7f8c8d !important;
+          background: #F1F5F9 !important;
+          border-color: #CBD5E1 !important;
+          color: #1E293B !important;
+        }
+        .app-edit-btn {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
         .app-edit-btn:hover {
-          background: #0A5C63 !important;
+          transform: translateY(-1.5px);
+          box-shadow: 0 6px 18px rgba(13, 148, 136, 0.4) !important;
+          background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%) !important;
+        }
+        .app-input-field {
+          width: 100%;
+          padding: 12px;
+          background: #F8FAFC;
+          border: 1.5px solid #E2E8F0;
+          border-radius: 10px;
+          font-size: 14.5px;
+          font-family: inherit;
+          color: #1E293B;
+          box-sizing: border-box;
+          transition: all 0.3s ease;
+        }
+        .app-input-field:focus {
+          outline: none;
+          background: #FFFFFF;
+          border-color: #0D9488;
+          box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+        }
+        .app-submit-btn {
+          padding: 12px 24px;
+          background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 14px rgba(13, 148, 136, 0.25);
+        }
+        .app-submit-btn:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 18px rgba(13, 148, 136, 0.4);
+        }
+        .app-cancel-btn {
+          padding: 12px 24px;
+          background: #F1F5F9;
+          color: #475569;
+          border: 1.5px solid #E2E8F0;
+          border-radius: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+        .app-cancel-btn:hover {
+          background: #E2E8F0;
+        }
+        .app-resume-download-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 20px;
+          background: rgba(13, 148, 136, 0.06);
+          border: 1.5px solid rgba(13, 148, 136, 0.15);
+          border-radius: 12px;
+          color: #0D9488;
+          text-decoration: none;
+          font-weight: 700;
+          font-size: 14px;
+          transition: all 0.25s ease;
+        }
+        .app-resume-download-btn:hover {
+          background: #0D9488;
+          color: white;
+          border-color: #0D9488;
+          box-shadow: 0 6px 16px rgba(13, 148, 136, 0.25);
+          transform: translateY(-1px);
         }
       `}</style>
+
       <div style={styles.container}>
         <div style={styles.header}>
           <button onClick={() => navigate("/applications")} style={styles.backBtn} className="app-back-btn">
-            ← Back to Applications
+            <i className="fas fa-arrow-left" style={{ marginRight: "6px" }}></i> Back
           </button>
-        <h1>Application Details</h1>
-        {!isEditing && canUpdate && (
-          <button onClick={() => setIsEditing(true)} style={styles.editBtn} className="app-edit-btn">
-            Edit Application
-          </button>
+          <h1 style={styles.pageTitle}>Application Details</h1>
+          {!isEditing && canUpdate && (
+            <button onClick={() => setIsEditing(true)} style={styles.editBtn} className="app-edit-btn">
+              Edit Details <i className="fas fa-edit" style={{ marginLeft: "6px", fontSize: "12px" }}></i>
+            </button>
+          )}
+        </div>
+
+        {/* Job Information */}
+        <div style={styles.section}>
+          <h2 style={styles.sectionHeading}>Applied Position</h2>
+          <div style={styles.jobInfo}>
+            <div style={styles.jobInfoLeft}>
+              <div style={styles.companyLogo}>
+                {application.job?.companyName ? application.job.companyName.charAt(0).toUpperCase() : "?"}
+              </div>
+              <div>
+                <h3 style={styles.jobTitleText}>{application.job?.title || "Job Unavailable"}</h3>
+                <p style={styles.company}>{application.job?.companyName}</p>
+                <p style={styles.location}>
+                  <i className="fas fa-map-marker-alt" style={{ marginRight: "6px", color: "#94A3B8" }}></i>
+                  {application.job?.location}
+                </p>
+                {application.job?.salary && (
+                  <p style={styles.salary}><i className="fas fa-money-bill-wave" style={{ marginRight: "6px" }}></i>${application.job.salary}k/year</p>
+                )}
+              </div>
+            </div>
+            <div style={styles.jobMeta}>
+              <div style={{ alignSelf: "flex-end" }}>
+                <span style={getStatusStyle(application.status)}>
+                  {application.status}
+                </span>
+              </div>
+              <p style={styles.deadline}>{deadlineMessage}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Update Error Message */}
+        {updateError && (
+          <div style={styles.updateErrorBox}>
+            <p style={{ margin: 0, fontWeight: "600" }}><i className="fas fa-exclamation-circle" style={{ marginRight: "8px" }}></i>{updateError}</p>
+          </div>
         )}
-      </div>
 
-      {/* Job Information */}
-      <div style={styles.section}>
-        <h2>Applied Job</h2>
-        <div style={styles.jobInfo}>
-          <div>
-            <h3>{application.job?.title}</h3>
-            <p style={styles.company}>{application.job?.companyName}</p>
-            <p style={styles.location}>{application.job?.location}</p>
-            {application.job?.salary && (
-              <p style={styles.salary}>Salary: {application.job.salary}</p>
-            )}
+        {/* Disable Update Message */}
+        {!canUpdate && (
+          <div style={styles.warningBox}>
+            <p style={{ margin: 0, fontWeight: "500" }}><i className="fas fa-info-circle" style={{ marginRight: "8px" }}></i>This application is locked. {application.status === "accepted" || application.status === "rejected" ? `The status is marked as ${application.status}.` : "The application deadline has passed."}</p>
           </div>
-          <div style={styles.jobMeta}>
-            <p style={getStatusStyle(application.status)}>
-              Status: {application.status}
-            </p>
-            <p style={styles.deadline}>{deadlineMessage}</p>
-          </div>
-        </div>
-      </div>
+        )}
 
-      {/* Update Error Message */}
-      {updateError && (
-        <div style={styles.updateErrorBox}>
-          <p>{updateError}</p>
-        </div>
-      )}
+        {/* Application Details */}
+        <div style={styles.section}>
+          <h2 style={styles.sectionHeading}>Candidate Profile Data</h2>
+          {isEditing ? (
+            <form onSubmit={handleSubmit} style={styles.form}>
+              <div style={styles.formRow}>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Full Name</label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    className="app-input-field"
+                    required
+                  />
+                </div>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Email Address</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="app-input-field"
+                    required
+                  />
+                </div>
+              </div>
 
-      {/* Disable Update Message */}
-      {!canUpdate && (
-        <div style={styles.warningBox}>
-          <p>⚠️ This application cannot be updated. {application.status === "accepted" || application.status === "rejected" ? `Status is ${application.status}.` : "The application deadline has passed."}</p>
-        </div>
-      )}
+              <div style={styles.formRow}>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Phone Number</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="app-input-field"
+                    required
+                  />
+                </div>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>City / Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    className="app-input-field"
+                    required
+                  />
+                </div>
+              </div>
 
-      {/* Application Details */}
-      <div style={styles.section}>
-        <h2>Your Application</h2>
-        {isEditing ? (
-          <form onSubmit={handleSubmit} style={styles.form}>
-            <div style={styles.formRow}>
               <div style={styles.formGroup}>
-                <label>Full Name</label>
+                <label style={styles.formLabel}>Portfolio URL</label>
+                <input
+                  type="url"
+                  name="portfolio"
+                  value={formData.portfolio}
+                  onChange={handleChange}
+                  className="app-input-field"
+                  placeholder="https://example.com"
+                />
+              </div>
+
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Experience (Years)</label>
                 <input
                   type="text"
-                  name="fullName"
-                  value={formData.fullName}
+                  name="experience"
+                  value={formData.experience}
                   onChange={handleChange}
+                  className="app-input-field"
                   required
                 />
               </div>
-              <div style={styles.formGroup}>
-                <label>Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
 
-            <div style={styles.formRow}>
               <div style={styles.formGroup}>
-                <label>Phone</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
+                <label style={styles.formLabel}>Professional Skills</label>
+                <textarea
+                  name="skills"
+                  value={formData.skills}
                   onChange={handleChange}
-                  required
+                  rows="3"
+                  className="app-input-field"
+                  style={{ resize: "vertical" }}
+                  placeholder="e.g., React, Node.js, MongoDB"
                 />
               </div>
+
               <div style={styles.formGroup}>
-                <label>Location</label>
+                <label style={styles.formLabel}>Availability</label>
                 <input
                   type="text"
-                  name="location"
-                  value={formData.location}
+                  name="availability"
+                  value={formData.availability}
                   onChange={handleChange}
-                  required
+                  className="app-input-field"
+                  placeholder="e.g., Immediate, 2 weeks"
                 />
               </div>
-            </div>
 
-            <div style={styles.formGroup}>
-              <label>Portfolio URL</label>
-              <input
-                type="url"
-                name="portfolio"
-                value={formData.portfolio}
-                onChange={handleChange}
-                placeholder="https://example.com"
-              />
-            </div>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Salary Expectation</label>
+                <input
+                  type="text"
+                  name="salaryExpectation"
+                  value={formData.salaryExpectation}
+                  onChange={handleChange}
+                  className="app-input-field"
+                  placeholder="e.g., ₹50,000 - ₹70,000"
+                />
+              </div>
 
-            <div style={styles.formGroup}>
-              <label>Experience (Years)</label>
-              <input
-                type="text"
-                name="experience"
-                value={formData.experience}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div style={styles.formGroup}>
-              <label>Skills</label>
-              <textarea
-                name="skills"
-                value={formData.skills}
-                onChange={handleChange}
-                rows="3"
-                placeholder="e.g., React, Node.js, MongoDB"
-              />
-            </div>
-
-            <div style={styles.formGroup}>
-              <label>Availability</label>
-              <input
-                type="text"
-                name="availability"
-                value={formData.availability}
-                onChange={handleChange}
-                placeholder="e.g., Immediate, 2 weeks"
-              />
-            </div>
-
-            <div style={styles.formGroup}>
-              <label>Salary Expectation</label>
-              <input
-                type="text"
-                name="salaryExpectation"
-                value={formData.salaryExpectation}
-                onChange={handleChange}
-                placeholder="e.g., ₹50,000 - ₹70,000"
-              />
-            </div>
-
-            <div style={styles.checkboxGroup}>
-              <label>
+              <div style={styles.checkboxGroup}>
                 <input
                   type="checkbox"
                   name="workAuthorization"
                   checked={formData.workAuthorization}
                   onChange={handleChange}
+                  id="workAuthCheck"
+                  style={{ accentColor: "#0D9488", cursor: "pointer", width: "16px", height: "16px" }}
                 />
-                I have work authorization
-              </label>
-            </div>
+                <label htmlFor="workAuthCheck" style={{ fontSize: "14.5px", color: "#1E293B", cursor: "pointer", fontWeight: "500" }}>
+                  I confirm that I have work authorization for this location
+                </label>
+              </div>
 
-            <div style={styles.formActions}>
-              <button type="submit" disabled={updating} style={styles.submitBtn}>
-                {updating ? "Updating..." : "Update Application"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                style={styles.cancelBtn}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        ) : (
-          <div style={styles.detailsView}>
-            <DetailRow label="Full Name" value={application.fullName} />
-            <DetailRow label="Email" value={application.email} />
-            <DetailRow label="Phone" value={application.phone} />
-            <DetailRow label="Location" value={application.location} />
-            <DetailRow label="Portfolio" value={application.portfolio} isLink />
-            <DetailRow label="Experience" value={application.experience} />
-            <DetailRow label="Skills" value={application.skills} />
-            <DetailRow label="Availability" value={application.availability} />
-            <DetailRow label="Salary Expectation" value={application.salaryExpectation} />
-            <DetailRow
-              label="Work Authorization"
-              value={application.workAuthorization ? "Yes" : "No"}
-            />
-            {application.resume && (
+              <div style={styles.formActions}>
+                <button type="submit" disabled={updating} className="app-submit-btn">
+                  {updating ? "Updating..." : "Save Modifications"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="app-cancel-btn"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div style={styles.detailsView}>
+              <DetailRow label="Full Name" value={application.fullName} />
+              <DetailRow label="Email" value={application.email} />
+              <DetailRow label="Phone" value={application.phone} />
+              <DetailRow label="Location" value={application.location} />
+              <DetailRow label="Portfolio" value={application.portfolio} isLink />
+              <DetailRow label="Experience" value={application.experience} />
+              <DetailRow label="Skills" value={application.skills} />
+              <DetailRow label="Availability" value={application.availability} />
+              <DetailRow label="Salary Expectation" value={application.salaryExpectation} />
               <DetailRow
-                label="Resume"
-                value="Download Resume"
-                isDownload
-                downloadUrl={application.resume}
+                label="Work Authorization"
+                value={application.workAuthorization ? "Yes" : "No"}
               />
-            )}
-          </div>
-        )}
+              {application.resume && (
+                <DetailRow
+                  label="Resume"
+                  value="Download Attached Resume"
+                  isDownload
+                  downloadUrl={application.resume}
+                />
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 };
@@ -359,20 +459,22 @@ const ApplicationDetailPage = () => {
 const DetailRow = ({ label, value, isLink = false, isDownload = false, downloadUrl = "" }) => {
   return (
     <div style={styles.detailRow}>
-      <span style={styles.detailLabel}>{label}:</span>
+      <span style={styles.detailLabel}>{label}</span>
       <span style={styles.detailValue}>
         {isDownload ? (
           <a
             href={downloadUrl}
             target="_blank"
             rel="noopener noreferrer"
-            style={styles.link}
+            className="app-resume-download-btn"
           >
-            {value}
+            <i className="far fa-file-pdf" style={{ fontSize: "16px" }}></i>
+            <span>{value}</span>
+            <i className="fas fa-download" style={{ fontSize: "12px", marginLeft: "2px" }}></i>
           </a>
         ) : isLink && value ? (
-          <a href={value} target="_blank" rel="noopener noreferrer" style={styles.link}>
-            {value}
+          <a href={value} target="_blank" rel="noopener noreferrer" style={styles.link} className="detail-link">
+            {value} <i className="fas fa-external-link-alt" style={{ fontSize: "11px", marginLeft: "4px" }}></i>
           </a>
         ) : (
           value || "—"
@@ -383,139 +485,217 @@ const DetailRow = ({ label, value, isLink = false, isDownload = false, downloadU
 };
 
 const getStatusStyle = (status) => {
-  const baseStyle = { fontWeight: "bold", padding: "4px 8px", borderRadius: "4px" };
+  const baseStyle = { 
+    fontWeight: "700", 
+    padding: "6px 14px", 
+    borderRadius: "20px",
+    fontSize: "12.5px",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+    display: "inline-block"
+  };
   const statusColors = {
-    pending: { ...baseStyle, color: "#f39c12", backgroundColor: "#fff3cd" },
-    accepted: { ...baseStyle, color: "#27ae60", backgroundColor: "#d4edda" },
-    rejected: { ...baseStyle, color: "#e74c3c", backgroundColor: "#f8d7da" },
-    shortlisted: { ...baseStyle, color: "#3498db", backgroundColor: "#d1ecf1" },
-    reviewed: { ...baseStyle, color: "#8e44ad", backgroundColor: "#e2d1f3" },
+    pending: { ...baseStyle, color: "#D97706", backgroundColor: "rgba(245, 158, 11, 0.08)", border: "1px solid rgba(245, 158, 11, 0.15)" },
+    accepted: { ...baseStyle, color: "#10B981", backgroundColor: "rgba(16, 185, 129, 0.08)", border: "1px solid rgba(16, 185, 129, 0.15)" },
+    rejected: { ...baseStyle, color: "#EF4444", backgroundColor: "rgba(239, 68, 68, 0.08)", border: "1px solid rgba(239, 68, 68, 0.15)" },
+    shortlisted: { ...baseStyle, color: "#3B82F6", backgroundColor: "rgba(59, 130, 246, 0.08)", border: "1px solid rgba(59, 130, 246, 0.15)" },
+    reviewed: { ...baseStyle, color: "#8B5CF6", backgroundColor: "rgba(139, 92, 246, 0.08)", border: "1px solid rgba(139, 92, 246, 0.15)" },
   };
   return statusColors[status] || statusColors.pending;
 };
 
 const styles = {
   container: {
-    padding: "20px",
-    maxWidth: "900px",
+    padding: "32px 20px",
+    maxWidth: "850px",
     margin: "0 auto",
+    boxSizing: "border-box",
+  },
+  pageTitle: {
+    fontSize: "30px",
+    fontWeight: "800",
+    color: "#0F172A",
+    margin: 0,
+    letterSpacing: "-0.5px",
   },
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "30px",
+    marginBottom: "32px",
     gap: "15px",
   },
   backBtn: {
-    padding: "10px 15px",
-    background: "#95a5a6",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
+    padding: "12px 22px",
+    background: "#FFFFFF",
+    color: "#475569",
+    border: "1.5px solid #E2E8F0",
+    borderRadius: "12px",
+    fontWeight: "600",
+    fontSize: "14.5px",
     cursor: "pointer",
-    fontSize: "14px",
   },
   editBtn: {
-    padding: "10px 20px",
-    background: "#1BA5A5",
+    padding: "12px 22px",
+    background: "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)",
     color: "white",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "12px",
+    fontWeight: "600",
+    fontSize: "14.5px",
     cursor: "pointer",
-    fontWeight: "bold",
+    boxShadow: "0 4px 14px rgba(13, 148, 136, 0.25)",
   },
   errorBox: {
-    padding: "20px",
-    background: "#ffebee",
-    border: "1px solid #ef5350",
-    borderRadius: "8px",
+    padding: "30px 20px",
+    background: "#FEF2F2",
+    border: "1.5px solid #EF4444",
+    borderRadius: "16px",
     textAlign: "center",
   },
   errorText: {
-    color: "#c62828",
-    marginBottom: "15px",
+    color: "#EF4444",
+    marginBottom: "16px",
+    fontWeight: "600",
   },
   loadingText: {
     fontSize: "18px",
-    color: "#666",
+    color: "#64748B",
     textAlign: "center",
+    padding: "40px",
+    fontWeight: "500",
   },
   section: {
-    marginBottom: "30px",
-    padding: "20px",
-    background: "#F5F6F7",
-    borderRadius: "8px",
+    marginBottom: "32px",
+    padding: "32px",
+    background: "#FFFFFF",
+    borderRadius: "16px",
+    border: "1.5px solid #E2E8F0",
+    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.02)",
+  },
+  sectionHeading: {
+    margin: "0 0 20px 0",
+    fontSize: "15px",
+    fontWeight: "800",
+    color: "#0F172A",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+    textAlign: "left",
   },
   jobInfo: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
     gap: "20px",
+  },
+  jobInfoLeft: {
+    display: "flex",
+    alignItems: "center",
+    gap: "20px",
+    textAlign: "left",
+  },
+  companyLogo: {
+    width: "56px",
+    height: "56px",
+    borderRadius: "14px",
+    background: "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "800",
+    fontSize: "20px",
+    boxShadow: "0 6px 14px rgba(13, 148, 136, 0.2)",
+    flexShrink: 0,
+  },
+  jobTitleText: {
+    margin: 0,
+    fontSize: "20px",
+    fontWeight: "800",
+    color: "#0F172A",
   },
   jobMeta: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    alignItems: "flex-end",
     gap: "10px",
+    flexShrink: 0,
   },
   company: {
-    color: "#666",
-    fontSize: "14px",
+    color: "#475569",
+    fontSize: "15px",
+    fontWeight: "600",
     margin: "5px 0",
   },
   location: {
-    color: "#999",
+    color: "#64748B",
     fontSize: "14px",
     margin: "5px 0",
+    fontWeight: "500",
+    display: "flex",
+    alignItems: "center",
   },
   salary: {
-    color: "#27ae60",
-    fontWeight: "bold",
-    fontSize: "14px",
+    color: "#0D9488",
+    fontWeight: "700",
+    fontSize: "15px",
     margin: "5px 0",
+    display: "flex",
+    alignItems: "center",
   },
   deadline: {
     fontSize: "13px",
-    color: "#555",
+    color: "#64748B",
+    fontWeight: "600",
   },
   warningBox: {
-    padding: "12px",
-    background: "#fff3cd",
-    border: "1px solid #ffc107",
-    borderRadius: "4px",
-    color: "#856404",
+    padding: "16px",
+    background: "rgba(245, 158, 11, 0.08)",
+    border: "1.5px solid rgba(245, 158, 11, 0.15)",
+    borderRadius: "12px",
+    color: "#D97706",
     marginBottom: "20px",
+    textAlign: "left",
   },
   updateErrorBox: {
-    padding: "12px",
-    background: "#ffebee",
-    border: "1px solid #ef5350",
-    borderRadius: "4px",
-    color: "#c62828",
+    padding: "14px",
+    background: "#FEF2F2",
+    border: "1.5px solid #EF4444",
+    borderRadius: "12px",
+    color: "#EF4444",
     marginBottom: "15px",
+    textAlign: "left",
   },
   detailsView: {
     display: "grid",
-    gap: "12px",
+    gap: "4px",
   },
   detailRow: {
     display: "grid",
-    gridTemplateColumns: "200px 1fr",
-    gap: "15px",
-    paddingBottom: "12px",
-    borderBottom: "1px solid #D9DDD4",
+    gridTemplateColumns: "180px 1fr",
+    gap: "24px",
+    padding: "16px 0",
+    borderBottom: "1.5px solid #F1F5F9",
+    textAlign: "left",
+    alignItems: "center",
   },
   detailLabel: {
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: "700",
+    color: "#64748B",
+    fontSize: "12.5px",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
   },
   detailValue: {
-    color: "#666",
+    color: "#1E293B",
     wordBreak: "break-word",
+    fontSize: "15.5px",
+    fontWeight: "500",
   },
   link: {
-    color: "#1BA5A5",
+    color: "#0D9488",
     textDecoration: "none",
+    fontWeight: "700",
   },
   form: {
     display: "grid",
@@ -529,34 +709,26 @@ const styles = {
   formGroup: {
     display: "flex",
     flexDirection: "column",
-    gap: "5px",
+    gap: "6px",
+    textAlign: "left",
+  },
+  formLabel: {
+    fontSize: "12.5px",
+    fontWeight: "700",
+    color: "#64748B",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
   },
   checkboxGroup: {
     display: "flex",
     alignItems: "center",
     gap: "10px",
+    marginTop: "10px",
   },
   formActions: {
     display: "flex",
-    gap: "10px",
+    gap: "12px",
     marginTop: "20px",
-  },
-  submitBtn: {
-    padding: "12px 20px",
-    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
-  cancelBtn: {
-    padding: "12px 20px",
-    background: "#95a5a6",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
   },
 };
 

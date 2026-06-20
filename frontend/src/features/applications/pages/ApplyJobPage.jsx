@@ -23,8 +23,14 @@ const ApplyJobPage = () => {
     workAuthorization: false,
   });
 
-  // Check user role and redirect recruiters
+  // Check user role and redirect recruiters/guests
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login or create an account first to apply for jobs!");
+      navigate("/login");
+      return;
+    }
     const role = localStorage.getItem("userRole");
     if (role === "recruiter") {
       setUserRole("recruiter");

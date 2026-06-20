@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LandingPage from "../features/landing/pages/LandingPage";
+import AboutPage from "../features/landing/pages/AboutPage";
 import Login from "../features/auth/pages/Login";
 import Register from "../features/auth/pages/Register";
 import JobsPage from "../features/jobs/pages/JobsPage";
@@ -19,10 +21,11 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Navbar />
       <Routes>
-        {/* Auth Routes */}
-        <Route path="/" element={<Login />} />
+        {/* Auth & Landing Routes */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/about" element={<AboutPage />} />
 
         {/* Job Routes */}
         <Route path="/jobs" element={<JobsPage />} />

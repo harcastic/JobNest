@@ -111,7 +111,90 @@ const Navbar = () => {
   }
 
   if (!token) {
-    return null;
+    return (
+      <>
+        <style>{`
+          .nav-link-btn {
+            position: relative;
+            color: #4B5563;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+          .nav-link-btn:hover {
+            color: #0D9488;
+            background: rgba(13, 148, 136, 0.06);
+          }
+          .logo-text {
+            background: linear-gradient(135deg, #0D9488 0%, #0f766e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-size: 24px;
+            letter-spacing: -0.5px;
+          }
+          .btn-brand-primary {
+            background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
+          }
+          .btn-brand-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 148, 136, 0.5);
+            background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%) !important;
+          }
+          .btn-brand-secondary {
+            background: rgba(255, 255, 255, 0.85);
+            color: #0F766E;
+            border: 1px solid rgba(13, 148, 136, 0.3);
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+          }
+          .btn-brand-secondary:hover {
+            background: rgba(13, 148, 136, 0.08);
+            transform: translateY(-2px);
+            border-color: #0D9488;
+          }
+        `}</style>
+        <nav style={styles.navbar}>
+          <div style={styles.topContainer}>
+            <div style={styles.logoSection} onClick={() => navigate("/")}>
+              <div style={styles.logoCircle}>
+                <i className="fas fa-briefcase"></i>
+              </div>
+              <div className="logo-text">JobNest</div>
+            </div>
+
+            <div style={styles.navLinks}>
+              <button onClick={() => navigate("/jobs")} className="nav-link-btn">Find Jobs</button>
+              <button onClick={() => navigate("/about")} className="nav-link-btn">About Us</button>
+            </div>
+
+            <div style={styles.rightSection}>
+              <button onClick={() => navigate("/login")} className="btn-brand-secondary" style={{ border: "none" }}>Sign In</button>
+              <button onClick={() => navigate("/register")} className="btn-brand-primary">Join Now</button>
+            </div>
+          </div>
+        </nav>
+      </>
+    );
   }
 
   // Render navigation items based on user role
@@ -190,20 +273,138 @@ const Navbar = () => {
   return (
     <>
       <style>{`
+        @keyframes dropdownSlide {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .nav-link-btn {
+          position: relative;
+          color: #4B5563;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          font-size: 15px;
+          font-weight: 500;
+          padding: 8px 12px;
+          border-radius: 8px;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-link-btn:hover {
+          color: #0D9488;
+          background: rgba(13, 148, 136, 0.06);
+        }
+        .nav-link-btn.active {
+          color: #0D9488;
+          background: rgba(13, 148, 136, 0.12);
+          font-weight: 600;
+        }
+        .navbar-search-btn {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
         .navbar-search-btn:hover {
-          background: linear-gradient(135deg, #0A5C63 0%, #003D40 100%) !important;
-          box-shadow: 0 6px 20px rgba(10, 92, 99, 0.5) !important;
+          background: linear-gradient(135deg, #0f766e 0%, #0b5c56 100%) !important;
+          box-shadow: 0 4px 15px rgba(13, 148, 136, 0.45) !important;
+          transform: translateY(-1px);
+        }
+        .logo-text {
+          background: linear-gradient(135deg, #0D9488 0%, #0f766e 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-weight: 800;
+          font-size: 24px;
+          letter-spacing: -0.5px;
+        }
+        .dropdown-item-hover {
+          transition: all 0.2s ease !important;
+        }
+        .dropdown-item-hover:hover {
+          background-color: #F8FAFC !important;
+          color: #0D9488 !important;
+          padding-left: 20px !important;
+        }
+        .logout-btn-hover {
+          transition: all 0.2s ease !important;
+        }
+        .logout-btn-hover:hover {
+          background-color: #FEF2F2 !important;
+          color: #DC2626 !important;
+          padding-left: 20px !important;
+        }
+        .search-input-wrapper-focus {
+          border-color: #E2E8F0;
+          transition: all 0.3s ease;
+        }
+        .search-input-wrapper-focus:focus-within {
+          border-color: #0D9488 !important;
+          box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
         }
       `}</style>
       {/* Top Navigation Bar */}
       <nav style={styles.navbar}>
         <div style={styles.topContainer}>
           <div style={styles.logoSection} onClick={() => navigate("/jobs")}>
-            <div style={styles.logo}>Job Nest</div>
+            <div style={styles.logoCircle}>
+              <i className="fas fa-briefcase"></i>
+            </div>
+            <div className="logo-text">JobNest</div>
           </div>
 
           <div style={styles.navLinks}>
-            {renderNavItems()}
+            {userRole === "recruiter" ? (
+              <>
+                <button
+                  onClick={() => navigate("/jobs")}
+                  className={`nav-link-btn ${isActive("/jobs") && !isActive("/jobs/create") && !isActive("/recruiter/jobs") ? "active" : ""}`}
+                >
+                  Find Jobs
+                </button>
+                <button
+                  onClick={() => navigate("/recruiter/jobs")}
+                  className={`nav-link-btn ${isActive("/recruiter/jobs") ? "active" : ""}`}
+                >
+                  My Jobs
+                </button>
+                <button
+                  onClick={() => navigate("/jobs/create")}
+                  className={`nav-link-btn ${isActive("/jobs/create") ? "active" : ""}`}
+                >
+                  Upload Job
+                </button>
+                <button
+                  onClick={() => navigate("/about")}
+                  className={`nav-link-btn ${isActive("/about") ? "active" : ""}`}
+                >
+                  About Us
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate("/jobs")}
+                  className={`nav-link-btn ${isActive("/jobs") ? "active" : ""}`}
+                >
+                  Find Jobs
+                </button>
+                <button
+                  onClick={() => navigate("/applications")}
+                  className={`nav-link-btn ${isActive("/applications") ? "active" : ""}`}
+                >
+                  My Applications
+                </button>
+                <button
+                  onClick={() => navigate("/about")}
+                  className={`nav-link-btn ${isActive("/about") ? "active" : ""}`}
+                >
+                  About Us
+                </button>
+              </>
+            )}
           </div>
 
           <div style={styles.rightSection}>
@@ -231,18 +432,25 @@ const Navbar = () => {
                     <span>{(userName || "U").charAt(0).toUpperCase()}</span>
                   )}
                 </div>
+                <i className={`fas fa-chevron-${showDropdown ? 'up' : 'down'}`} style={{ color: '#9CA3AF', fontSize: '12px', marginLeft: '4px' }}></i>
               </button>
 
               {showDropdown && (
                 <div style={styles.dropdownMenu}>
+                  <div style={styles.dropdownHeader}>
+                    <p style={styles.dropdownName}>{userName || "User"}</p>
+                    <p style={styles.dropdownEmail}>{userRole === 'recruiter' ? 'Recruiter Account' : 'Job Seeker Account'}</p>
+                  </div>
+                  <div style={styles.divider}></div>
                   <button
                     onClick={() => {
                       navigate("/profile");
                       setShowDropdown(false);
                     }}
                     style={styles.dropdownItem}
+                    className="dropdown-item-hover"
                   >
-                    View Profile
+                    <i className="far fa-user" style={styles.dropdownIcon}></i> View Profile
                   </button>
                   <button
                     onClick={() => {
@@ -250,11 +458,11 @@ const Navbar = () => {
                       setShowDropdown(false);
                     }}
                     style={styles.dropdownItem}
+                    className="dropdown-item-hover"
                   >
-                    Edit Profile
+                    <i className="far fa-edit" style={styles.dropdownIcon}></i> Edit Profile
                   </button>
                   
-                  {/* Show "My Applications" only for Job Seekers, not Recruiters */}
                   {userRole !== 'recruiter' && (
                     <button
                       onClick={() => {
@@ -262,8 +470,9 @@ const Navbar = () => {
                         setShowDropdown(false);
                       }}
                       style={styles.dropdownItem}
+                      className="dropdown-item-hover"
                     >
-                      My Applications
+                      <i className="far fa-file-alt" style={styles.dropdownIcon}></i> My Applications
                     </button>
                   )}
                   
@@ -272,8 +481,9 @@ const Navbar = () => {
                     onClick={handleLogout}
                     disabled={logoutLoading}
                     style={{ ...styles.dropdownItem, ...styles.logoutItem, ...(logoutLoading ? styles.disabledButton : {}) }}
+                    className="logout-btn-hover"
                   >
-                    {logoutLoading ? "Logging out..." : "Logout"}
+                    <i className="fas fa-sign-out-alt" style={styles.dropdownIcon}></i> {logoutLoading ? "Logging out..." : "Logout"}
                   </button>
                 </div>
               )}
@@ -286,23 +496,25 @@ const Navbar = () => {
       {userRole !== 'recruiter' && location.pathname === "/jobs" && (
         <div style={styles.searchSection}>
           <div style={styles.searchContainer}>
-            <form style={styles.searchForm} onSubmit={handleSearch}>
+            <form style={styles.searchForm} onSubmit={handleSearch} className="search-input-wrapper-focus">
               <div style={styles.searchInputWrapper}>
-                <i className="fas fa-magnifying-glass" style={styles.searchIcon}></i>
+                <i className="fas fa-search" style={styles.searchIcon}></i>
                 <input
                   type="text"
-                  placeholder="Job title or keyword"
+                  placeholder="Job title, keywords, or company"
                   value={searchTitle}
                   onChange={(e) => setSearchTitle(e.target.value)}
                   style={styles.searchInput}
                 />
               </div>
 
+              <div style={styles.searchDivider}></div>
+
               <div style={styles.searchInputWrapper}>
                 <i className="fas fa-location-dot" style={styles.searchIcon}></i>
                 <input
                   type="text"
-                  placeholder="Add country or city"
+                  placeholder="City, state, or 'Remote'"
                   value={searchLocation}
                   onChange={(e) => setSearchLocation(e.target.value)}
                   style={styles.searchInput}
@@ -310,7 +522,7 @@ const Navbar = () => {
               </div>
 
               <button type="submit" style={styles.searchButton} className="navbar-search-btn">
-                Search
+                Find Jobs
               </button>
             </form>
           </div>
@@ -322,71 +534,54 @@ const Navbar = () => {
 
 const styles = {
   navbar: {
-    background: "#FFFFFF",
-    color: "#2C3E50",
-    padding: "12px 0",
-    boxShadow: "0 2px 12px rgba(27, 165, 165, 0.12)",
+    background: "rgba(255, 255, 255, 0.85)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
     position: "sticky",
     top: 0,
     zIndex: 100,
-    borderBottom: "2px solid #1BA5A5",
+    borderBottom: "1px solid rgba(229, 231, 235, 0.5)",
+    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03)"
   },
   topContainer: {
-    maxWidth: "1400px",
+    maxWidth: "1280px",
     margin: "0 auto",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "0 40px",
-    gap: "40px",
+    padding: "16px 24px",
+    gap: "32px",
   },
   logoSection: {
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
-    transition: "transform 0.3s ease",
-    ":hover": {
-      transform: "scale(1.05)",
-    },
+    gap: "10px",
+    transition: "opacity 0.2s ease",
   },
-  logo: {
-    fontSize: "28px",
-    fontWeight: "bold",
-    color: "#1BA5A5",
-    width: "auto",
+  logoCircle: {
+    width: "36px",
+    height: "36px",
+    background: "linear-gradient(135deg, #0D9488 0%, #0f766e 100%)",
+    borderRadius: "10px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    letterSpacing: "-1px",
+    color: "white",
+    fontSize: "18px",
+    boxShadow: "0 4px 6px rgba(13, 148, 136, 0.2)",
   },
   navLinks: {
     display: "flex",
-    gap: "30px",
+    gap: "8px",
     flex: 1,
     justifyContent: "center",
-  },
-  navLink: {
-    background: "transparent",
-    color: "#2C3E50",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "15px",
-    fontWeight: "500",
-    padding: "8px 0",
-    transition: "color 0.3s ease, border-bottom 0.3s ease",
-    borderBottom: "2px solid transparent",
-    ":hover": {
-      color: "#1BA5A5",
-    },
-  },
-  activeLink: {
-    color: "#1BA5A5",
-    borderBottom: "2px solid #1BA5A5",
+    alignItems: "center",
   },
   rightSection: {
     display: "flex",
     alignItems: "center",
-    gap: "20px",
+    gap: "16px",
   },
   profileDropdown: {
     position: "relative",
@@ -396,50 +591,47 @@ const styles = {
     alignItems: "center",
     gap: "12px",
     background: "transparent",
-    border: "none",
+    border: "1px solid transparent",
     cursor: "pointer",
-    padding: "6px 12px",
-    borderRadius: "8px",
-    transition: "background 0.3s ease",
+    padding: "6px 10px",
+    borderRadius: "12px",
+    transition: "all 0.2s ease",
   },
   userInfo: {
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-end",
-    gap: "4px",
-    minWidth: "80px",
+    gap: "2px",
   },
   userName: {
-    color: "#1F3A7D",
-    fontSize: "13px",
+    color: "#111827",
+    fontSize: "14px",
     fontWeight: "600",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    maxWidth: "100px",
+    maxWidth: "120px",
   },
   userRole: {
-    color: "#999",
-    fontSize: "11px",
+    color: "#6B7280",
+    fontSize: "12px",
     fontWeight: "400",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    maxWidth: "100px",
   },
   avatarCircle: {
-    width: "40px",
-    height: "40px",
+    width: "42px",
+    height: "42px",
     borderRadius: "50%",
-    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
+    background: "linear-gradient(135deg, #0D9488 0%, #0f766e 100%)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     color: "white",
     fontWeight: "bold",
-    fontSize: "15px",
+    fontSize: "16px",
     flexShrink: 0,
     overflow: "hidden",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    border: "2px solid #ffffff",
   },
   avatarImage: {
     width: "100%",
@@ -448,100 +640,121 @@ const styles = {
   },
   dropdownMenu: {
     position: "absolute",
-    top: "50px",
+    top: "calc(100% + 8px)",
     right: 0,
-    background: "white",
-    color: "#2C3E50",
-    borderRadius: "8px",
-    boxShadow: "0 8px 24px rgba(27, 165, 165, 0.15)",
-    minWidth: "200px",
+    background: "#ffffff",
+    borderRadius: "12px",
+    boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05)",
+    minWidth: "220px",
     zIndex: 1000,
     overflow: "hidden",
-    border: "1px solid #D9DDD4",
+    border: "1px solid rgba(229, 231, 235, 1)",
+    animation: "dropdownSlide 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards",
+  },
+  dropdownHeader: {
+    padding: "16px",
+    background: "#F9FAFB",
+  },
+  dropdownName: {
+    margin: 0,
+    fontWeight: "600",
+    color: "#111827",
+    fontSize: "14px",
+  },
+  dropdownEmail: {
+    margin: "4px 0 0 0",
+    color: "#6B7280",
+    fontSize: "12px",
   },
   dropdownItem: {
-    display: "block",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
     width: "100%",
     padding: "12px 16px",
     border: "none",
     background: "transparent",
     cursor: "pointer",
     fontSize: "14px",
-    color: "#2C3E50",
+    fontWeight: "500",
+    color: "#374151",
     textAlign: "left",
-    transition: "background 0.2s ease",
+    transition: "all 0.2s ease",
+  },
+  dropdownIcon: {
+    width: "16px",
+    textAlign: "center",
+    fontSize: "14px",
+    opacity: 0.7,
   },
   divider: {
     height: "1px",
-    background: "#D9DDD4",
-    margin: "4px 0",
+    background: "#E5E7EB",
+    margin: "0",
   },
   logoutItem: {
-    color: "#e74c3c",
-    fontWeight: "500",
+    color: "#EF4444",
   },
-  // Search Section Styles
   searchSection: {
-    background: "#FFFFFF",
-    borderTop: "1px solid #D9DDD4",
-    borderBottom: "1px solid #D9DDD4",
-    padding: "24px 0",
-    position: "sticky",
-    top: 70,
-    zIndex: 99,
+    background: "linear-gradient(to bottom, #F8FAFC, #FFFFFF)",
+    borderBottom: "1px solid #E5E7EB",
+    padding: "20px 0",
   },
   searchContainer: {
-    maxWidth: "1400px",
+    maxWidth: "900px",
     margin: "0 auto",
-    padding: "0 40px",
+    padding: "0 24px",
   },
   searchForm: {
     display: "flex",
-    gap: "16px",
+    background: "white",
+    borderRadius: "16px",
+    padding: "8px",
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02)",
     alignItems: "center",
-    flexWrap: "wrap",
+    border: "1.5px solid #E2E8F0",
+    transition: "all 0.3s ease",
   },
   searchInputWrapper: {
     flex: 1,
-    minWidth: "200px",
     position: "relative",
     display: "flex",
     alignItems: "center",
-    background: "white",
-    borderRadius: "8px",
-    overflow: "hidden",
-    boxShadow: "0 2px 8px rgba(27, 165, 165, 0.1)",
-    border: "2px solid #1BA5A5",
+    background: "transparent",
   },
   searchIcon: {
     position: "absolute",
-    left: "14px",
-    fontSize: "18px",
+    left: "16px",
+    fontSize: "16px",
     pointerEvents: "none",
-    color: "#1BA5A5",
+    color: "#9CA3AF",
+  },
+  searchDivider: {
+    width: "1px",
+    height: "28px",
+    background: "#E5E7EB",
+    margin: "0 8px",
   },
   searchInput: {
     width: "100%",
-    padding: "14px 14px 14px 44px",
+    padding: "12px 16px 12px 42px",
     border: "none",
-    fontSize: "14px",
+    fontSize: "15px",
     outline: "none",
-    color: "#333",
-    background: "white",
-    transition: "background 0.3s ease",
+    color: "#111827",
+    background: "transparent",
   },
   searchButton: {
-    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
+    background: "linear-gradient(135deg, #0D9488 0%, #0f766e 100%)",
     color: "white",
     border: "none",
-    padding: "14px 40px",
-    borderRadius: "25px",
+    padding: "12px 28px",
+    borderRadius: "12px",
     fontSize: "15px",
     fontWeight: "600",
     cursor: "pointer",
-    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+    transition: "all 0.2s ease",
     whiteSpace: "nowrap",
-    boxShadow: "0 4px 15px rgba(27, 165, 165, 0.3)",
   },
   disabledButton: {
     opacity: 0.6,

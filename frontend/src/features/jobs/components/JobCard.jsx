@@ -28,7 +28,7 @@ const JobCard = ({ job, applicantsCount = 0 }) => {
   };
 
   return (
-    <Link to={`/jobs/${job._id}`} style={{ 
+    <Link to={`/jobs/${job._id}`} className="job-card-link" style={{ 
       textDecoration: "none", 
       color: "inherit",
       display: "flex",
@@ -36,7 +36,7 @@ const JobCard = ({ job, applicantsCount = 0 }) => {
       minWidth: 0,
       height: "100%",
     }}>
-      <div style={styles.card}>
+      <div style={styles.card} className="job-card">
         {/* Header with logo and save button */}
         <div style={styles.header}>
           <div style={styles.logoContainer}>
@@ -53,13 +53,15 @@ const JobCard = ({ job, applicantsCount = 0 }) => {
             </div>
           </div>
           <button
+            className="save-btn"
             style={{
               ...styles.saveButton,
-              color: isSaved ? "#e74c3c" : "#ccc",
+              color: isSaved ? "#EF4444" : "#9CA3AF",
+              background: isSaved ? "#FEF2F2" : "rgba(243, 244, 246, 0.8)",
             }}
             onClick={handleSaveJob}
           >
-            ♡
+            <i className={`${isSaved ? 'fas' : 'far'} fa-heart`} style={{ fontSize: '18px' }}></i>
           </button>
         </div>
 
@@ -108,16 +110,12 @@ const JobCard = ({ job, applicantsCount = 0 }) => {
 const styles = {
   card: {
     backgroundColor: "#ffffff",
-    border: "1px solid #D9DDD4",
-    borderRadius: "12px",
-    padding: "20px",
+    border: "1.5px solid #E2E8F0",
+    borderRadius: "16px",
+    padding: "24px",
     cursor: "pointer",
-    transition: "box-shadow 0.3s ease, transform 0.3s ease",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-    ":hover": {
-      boxShadow: "0 8px 24px rgba(27, 165, 165, 0.2)",
-      transform: "translateY(-2px)",
-    },
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.02)",
     width: "100%",
     maxWidth: "100%",
     boxSizing: "border-box",
@@ -125,12 +123,13 @@ const styles = {
     flexDirection: "column",
     height: "100%",
     flex: 1,
+    position: "relative",
   },
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: "12px",
+    marginBottom: "16px",
     gap: "8px",
     minWidth: 0,
   },
@@ -140,44 +139,49 @@ const styles = {
     minWidth: 0,
   },
   logo: {
-    width: "48px",
-    height: "48px",
-    borderRadius: "8px",
-    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
+    width: "52px",
+    height: "52px",
+    borderRadius: "12px",
+    background: "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     color: "white",
     fontWeight: "bold",
-    fontSize: "20px",
+    fontSize: "22px",
     flexShrink: 0,
     overflow: "hidden",
+    boxShadow: "0 4px 10px rgba(13, 148, 136, 0.2)",
   },
   logoImage: {
     width: "100%",
     height: "100%",
     objectFit: "cover",
-    borderRadius: "8px",
+    borderRadius: "12px",
   },
   saveButton: {
-    background: "none",
+    background: "rgba(243, 244, 246, 0.8)",
     border: "none",
-    fontSize: "24px",
+    fontSize: "20px",
     cursor: "pointer",
-    padding: "0",
-    transition: "color 0.3s ease",
+    padding: "6px 8px",
+    borderRadius: "8px",
+    transition: "all 0.2s ease",
     flexShrink: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   titleSection: {
-    marginBottom: "12px",
+    marginBottom: "16px",
     minWidth: 0,
     flex: 1,
   },
   jobTitle: {
-    margin: "0 0 4px 0",
+    margin: "0 0 6px 0",
     fontSize: "18px",
-    fontWeight: "600",
-    color: "#1F3A7D",
+    fontWeight: "700",
+    color: "#111827",
     wordWrap: "break-word",
     overflowWrap: "break-word",
     overflow: "hidden",
@@ -185,11 +189,13 @@ const styles = {
     display: "-webkit-box",
     WebkitLineClamp: 2,
     WebkitBoxOrient: "vertical",
+    lineHeight: "1.3",
   },
   companyInfo: {
     margin: "0",
     fontSize: "14px",
-    color: "#666",
+    color: "#6B7280",
+    fontWeight: "500",
     wordWrap: "break-word",
     overflowWrap: "break-word",
     overflow: "hidden",
@@ -199,29 +205,29 @@ const styles = {
   tagsContainer: {
     display: "flex",
     gap: "8px",
-    marginBottom: "12px",
+    marginBottom: "16px",
     flexWrap: "wrap",
     minWidth: 0,
   },
   tag: {
-    padding: "4px 12px",
-    borderRadius: "20px",
+    padding: "6px 12px",
+    borderRadius: "8px",
     fontSize: "12px",
-    fontWeight: "500",
+    fontWeight: "600",
     display: "inline-block",
     whiteSpace: "nowrap",
   },
   description: {
-    margin: "0 0 12px 0",
-    fontSize: "13px",
-    color: "#666",
-    lineHeight: "1.5",
+    margin: "0 0 20px 0",
+    fontSize: "14px",
+    color: "#4B5563",
+    lineHeight: "1.6",
     wordWrap: "break-word",
     overflowWrap: "break-word",
     overflow: "hidden",
     textOverflow: "ellipsis",
     display: "-webkit-box",
-    WebkitLineClamp: 2,
+    WebkitLineClamp: 3,
     WebkitBoxOrient: "vertical",
     flex: 1,
   },
@@ -229,8 +235,8 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: "12px",
-    borderTop: "1px solid #D9DDD4",
+    paddingTop: "16px",
+    borderTop: "1px solid #F3F4F6",
     gap: "8px",
     marginTop: "auto",
     minWidth: 0,
@@ -238,36 +244,52 @@ const styles = {
   salary: {
     fontSize: "18px",
     fontWeight: "700",
-    color: "#1BA5A5",
+    color: "#0D9488",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
   },
   postedTime: {
     fontSize: "13px",
-    color: "#999",
+    color: "#9CA3AF",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
     textAlign: "right",
+    fontWeight: "500",
   },
 };
 
-// Add dynamic tag colors
 const tagStyles = `
+  .job-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  .job-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 16px 28px -6px rgba(13, 148, 136, 0.12), 0 6px 12px -4px rgba(13, 148, 136, 0.08) !important;
+    border-color: #0D9488 !important;
+  }
+  .save-btn {
+    transition: all 0.2s ease !important;
+  }
+  .save-btn:hover {
+    transform: scale(1.1);
+    background: #FEF2F2 !important;
+    color: #EF4444 !important;
+  }
   .entry-level {
-    background: #D4F3F3 !important;
-    color: #0D7A86 !important;
+    background: rgba(13, 148, 136, 0.08) !important;
+    color: #0D9488 !important;
     font-weight: 600;
   }
   .full-time {
-    background: #D9F5D9 !important;
-    color: #1B5E20 !important;
+    background: rgba(16, 185, 129, 0.08) !important;
+    color: #10B981 !important;
     font-weight: 600;
   }
   .timing {
-    background: #FFF3E0 !important;
-    color: #E65100 !important;
+    background: rgba(249, 115, 22, 0.08) !important;
+    color: #F97316 !important;
     font-weight: 600;
   }
 `;

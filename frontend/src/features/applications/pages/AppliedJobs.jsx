@@ -16,7 +16,6 @@ const AppliedJobs = () => {
     const role = localStorage.getItem("userRole");
     if (role === "recruiter") {
       setUserRole("recruiter");
-      // Redirect after 2 seconds
       setTimeout(() => {
         navigate("/jobs");
       }, 2000);
@@ -35,7 +34,6 @@ const AppliedJobs = () => {
 
     try {
       await deleteApplication(appId);
-      // Refetch applications to update the list
       if (refetch) {
         refetch();
       }
@@ -77,72 +75,122 @@ const AppliedJobs = () => {
   return (
     <>
       <style>{`
+        .browse-jobs-btn {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
         .browse-jobs-btn:hover {
-          background: #0A5C63 !important;
+          transform: translateY(-1.5px);
+          box-shadow: 0 6px 18px rgba(13, 148, 136, 0.4) !important;
+          background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%) !important;
+        }
+        .app-list-card {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .app-list-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 16px 28px -6px rgba(13, 148, 136, 0.12), 0 6px 12px -4px rgba(13, 148, 136, 0.08) !important;
+          border-color: #0D9488 !important;
+        }
+        .app-withdraw-btn {
+          transition: all 0.25s ease !important;
+        }
+        .app-withdraw-btn:hover:not(:disabled) {
+          background: #DC2626 !important;
+          box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25) !important;
+        }
+        .start-app-btn {
+          background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+          color: white;
+          padding: 12px 24px;
+          border-radius: 12px;
+          border: none;
+          font-weight: 700;
+          font-size: 15px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 14px rgba(13, 148, 136, 0.2);
+          margin-top: 16px;
+        }
+        .start-app-btn:hover {
+          transform: translateY(-1.5px);
+          box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
         }
       `}</style>
       <div style={styles.container}>
-      <div style={styles.header}>
-        <h1>My Applications</h1>
-        <button onClick={() => navigate("/jobs")} style={styles.browseBtn} className="browse-jobs-btn">
-          Browse Jobs
-        </button>
+        <div style={styles.header}>
+          <h1 style={styles.pageTitle}>My Applications</h1>
+          <button onClick={() => navigate("/jobs")} style={styles.browseBtn} className="browse-jobs-btn">
+            Browse Jobs <i className="fas fa-search" style={{ marginLeft: "6px", fontSize: "13px" }}></i>
+          </button>
+        </div>
+
+        {deleteError && (
+          <div style={styles.deleteError}>
+            <p style={{ margin: 0, fontWeight: "500" }}><i className="fas fa-exclamation-circle" style={{ marginRight: "8px" }}></i>{deleteError}</p>
+            <button onClick={() => setDeleteError(null)} style={styles.dismissBtn}>
+              Dismiss
+            </button>
+          </div>
+        )}
+
+        {!applications || applications.length === 0 ? (
+          <div style={styles.noApplications}>
+            <p style={{ fontSize: "16px", color: "#64748B", margin: "0 0 10px 0", fontWeight: "500" }}>You haven't submitted any applications yet.</p>
+            <button onClick={() => navigate("/jobs")} className="start-app-btn">
+              Start applying now!
+            </button>
+          </div>
+        ) : (
+          <div style={styles.applicationsList}>
+            {applications.map((app) => (
+              <div
+                key={app._id}
+                style={styles.card}
+                className="app-list-card"
+                onClick={() => navigate(`/applications/${app._id}`)}
+              >
+                {/* Visual Company Logo Container */}
+                <div style={styles.logoContainer}>
+                  <div style={styles.companyLogo}>
+                    {app.job?.companyName ? app.job.companyName.charAt(0).toUpperCase() : "?"}
+                  </div>
+                </div>
+
+                <div style={styles.cardContent}>
+                  <h3 style={styles.jobTitle}>{app.job?.title || "Job Unavailable"}</h3>
+                  <p style={styles.company}>{app.job?.companyName || "Unknown Company"}</p>
+                  <p style={styles.location}>
+                    <i className="fas fa-map-marker-alt" style={{ marginRight: "6px", color: "#94A3B8" }}></i>
+                    {app.job?.location || "Remote"}
+                  </p>
+                </div>
+
+                <div style={styles.cardFooter}>
+                  <span style={getStatusStyle(app.status)}>
+                    {app.status || "pending"}
+                  </span>
+                  <small style={styles.dateText}>Applied {new Date(app.createdAt).toLocaleDateString()}</small>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(app._id);
+                    }}
+                    disabled={deleting === app._id}
+                    style={{
+                      ...styles.deleteBtn,
+                      opacity: deleting === app._id ? 0.6 : 1,
+                      cursor: deleting === app._id ? "not-allowed" : "pointer",
+                    }}
+                    className="app-withdraw-btn"
+                  >
+                    {deleting === app._id ? "Withdrawing..." : "Withdraw"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
-      {deleteError && (
-        <div style={styles.deleteError}>
-          <p>{deleteError}</p>
-          <button onClick={() => setDeleteError(null)} style={styles.dismissBtn}>
-            Dismiss
-          </button>
-        </div>
-      )}
-
-      {!applications || applications.length === 0 ? (
-        <div style={styles.noApplications}>
-          <p>You haven't applied to any jobs yet.</p>
-          <button onClick={() => navigate("/jobs")}>
-            Start applying now!
-          </button>
-        </div>
-      ) : (
-        <div style={styles.applicationsList}>
-          {applications.map((app) => (
-            <div
-              key={app._id}
-              style={styles.card}
-              onClick={() => navigate(`/applications/${app._id}`)}
-            >
-              <div style={styles.cardContent}>
-                <h3>{app.job?.title || "Job Deleted"}</h3>
-                <p style={styles.company}>{app.job?.companyName}</p>
-                <p style={styles.location}>{app.job?.location}</p>
-              </div>
-              <div style={styles.cardFooter}>
-                <span style={getStatusStyle(app.status)}>
-                  {app.status || "pending"}
-                </span>
-                <small>{new Date(app.createdAt).toLocaleDateString()}</small>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(app._id);
-                  }}
-                  disabled={deleting === app._id}
-                  style={{
-                    ...styles.deleteBtn,
-                    opacity: deleting === app._id ? 0.6 : 1,
-                    cursor: deleting === app._id ? "not-allowed" : "pointer",
-                  }}
-                >
-                  {deleting === app._id ? "Withdrawing..." : "Withdraw"}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
     </>
   );
 };
@@ -150,16 +198,39 @@ const AppliedJobs = () => {
 const getStatusStyle = (status) => {
   const baseStyle = {
     padding: "6px 12px",
-    borderRadius: "4px",
+    borderRadius: "20px",
     fontSize: "12px",
-    fontWeight: "bold",
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+    display: "inline-block",
   };
 
   const statusStyles = {
-    pending: { ...baseStyle, background: "#f39c12", color: "white" },
-    accepted: { ...baseStyle, background: "#27ae60", color: "white" },
-    rejected: { ...baseStyle, background: "#e74c3c", color: "white" },
-    shortlisted: { ...baseStyle, background: "#3498db", color: "white" },
+    pending: { 
+      ...baseStyle, 
+      background: "rgba(245, 158, 11, 0.08)", 
+      color: "#D97706",
+      border: "1px solid rgba(245, 158, 11, 0.15)"
+    },
+    accepted: { 
+      ...baseStyle, 
+      background: "rgba(16, 185, 129, 0.08)", 
+      color: "#10B981",
+      border: "1px solid rgba(16, 185, 129, 0.15)"
+    },
+    rejected: { 
+      ...baseStyle, 
+      background: "rgba(239, 68, 68, 0.08)", 
+      color: "#EF4444",
+      border: "1px solid rgba(239, 68, 68, 0.15)"
+    },
+    shortlisted: { 
+      ...baseStyle, 
+      background: "rgba(59, 130, 246, 0.08)", 
+      color: "#3B82F6",
+      border: "1px solid rgba(59, 130, 246, 0.15)"
+    },
   };
 
   return statusStyles[status] || statusStyles.pending;
@@ -167,111 +238,167 @@ const getStatusStyle = (status) => {
 
 const styles = {
   container: {
-    padding: "20px",
+    padding: "32px 20px",
     maxWidth: "900px",
     margin: "0 auto",
+    boxSizing: "border-box",
+  },
+  pageTitle: {
+    fontSize: "30px",
+    fontWeight: "800",
+    color: "#0F172A",
+    margin: 0,
+    letterSpacing: "-0.5px",
   },
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "30px",
+    marginBottom: "32px",
   },
   browseBtn: {
-    padding: "10px 20px",
-    background: "#1BA5A5",
+    padding: "12px 22px",
+    background: "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)",
     color: "white",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "12px",
+    fontWeight: "600",
+    fontSize: "14.5px",
     cursor: "pointer",
+    boxShadow: "0 4px 14px rgba(13, 148, 136, 0.25)",
   },
   loadingText: {
     fontSize: "18px",
-    color: "#666",
+    color: "#64748B",
     textAlign: "center",
+    padding: "40px",
+    fontWeight: "500",
   },
   errorText: {
     fontSize: "16px",
-    color: "#e74c3c",
+    color: "#EF4444",
+    textAlign: "center",
+    padding: "40px",
   },
   noApplications: {
     textAlign: "center",
-    padding: "40px",
-    border: "1px solid #D9DDD4",
-    borderRadius: "8px",
+    padding: "60px 40px",
+    background: "#FFFFFF",
+    borderRadius: "16px",
+    border: "1.5px dashed #E2E8F0",
   },
   applicationsList: {
     display: "grid",
-    gap: "15px",
+    gap: "18px",
   },
   card: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    border: "1px solid #D9DDD4",
-    padding: "15px",
-    borderRadius: "8px",
+    border: "1.5px solid #E2E8F0",
+    padding: "24px",
+    borderRadius: "16px",
     cursor: "pointer",
-    transition: "all 0.3s ease",
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffff",
+    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.02)",
+    gap: "20px",
+  },
+  logoContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  companyLogo: {
+    width: "48px",
+    height: "48px",
+    borderRadius: "12px",
+    background: "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "800",
+    fontSize: "18px",
+    boxShadow: "0 4px 10px rgba(13, 148, 136, 0.18)",
   },
   cardContent: {
     flex: 1,
+    textAlign: "left",
+    minWidth: 0,
+  },
+  jobTitle: {
+    margin: "0 0 6px 0",
+    fontSize: "18px",
+    fontWeight: "700",
+    color: "#0F172A",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   },
   company: {
-    color: "#666",
-    margin: "5px 0",
-    fontSize: "14px",
+    color: "#475569",
+    margin: "0 0 6px 0",
+    fontSize: "14.5px",
+    fontWeight: "600",
   },
   location: {
-    color: "#999",
-    margin: "5px 0",
-    fontSize: "14px",
+    color: "#64748B",
+    margin: 0,
+    fontSize: "13.5px",
+    fontWeight: "500",
+    display: "flex",
+    alignItems: "center",
   },
   cardFooter: {
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-end",
     gap: "8px",
+    flexShrink: 0,
+  },
+  dateText: {
+    fontSize: "12.5px",
+    color: "#94A3B8",
+    fontWeight: "500",
   },
   deleteBtn: {
-    padding: "6px 12px",
-    background: "#e74c3c",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
+    padding: "6px 14px",
+    background: "rgba(239, 68, 68, 0.08)",
+    color: "#EF4444",
+    border: "1px solid rgba(239, 68, 68, 0.15)",
+    borderRadius: "8px",
     fontSize: "12px",
-    fontWeight: "bold",
+    fontWeight: "700",
     cursor: "pointer",
-    transition: "background 0.3s",
   },
   deleteError: {
-    padding: "12px",
-    background: "#ffebee",
-    border: "1px solid #ef5350",
-    borderRadius: "4px",
-    color: "#c62828",
-    marginBottom: "15px",
+    padding: "14px",
+    background: "#FEF2F2",
+    border: "1.5px solid #EF4444",
+    borderRadius: "12px",
+    color: "#EF4444",
+    marginBottom: "20px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
   },
   dismissBtn: {
-    padding: "4px 8px",
+    padding: "4px 10px",
     background: "transparent",
-    color: "#c62828",
-    border: "1px solid #c62828",
-    borderRadius: "4px",
+    color: "#EF4444",
+    border: "1px solid #EF4444",
+    borderRadius: "6px",
     fontSize: "12px",
     cursor: "pointer",
+    fontWeight: "600",
   },
   accessDenied: {
     textAlign: "center",
-    padding: "40px 20px",
-    background: "#ffebee",
-    borderRadius: "8px",
-    color: "#c62828",
-    marginTop: "30px",
+    padding: "60px 20px",
+    background: "#FEF2F2",
+    borderRadius: "16px",
+    color: "#EF4444",
   },
 };
 

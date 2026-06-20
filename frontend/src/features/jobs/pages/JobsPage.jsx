@@ -235,13 +235,13 @@ const JobsPage = () => {
           <div style={styles.filterSection}>
             <div style={styles.filterHeader}>
               <h3 style={styles.filterTitle}>Job Type</h3>
-              <button onClick={handleClearAllFilters} style={styles.clearAllBtn}>
+              <button onClick={handleClearAllFilters} style={styles.clearAllBtn} className="clear-all-btn-hover">
                 Clear all
               </button>
             </div>
 
             <div style={styles.filterGroup}>
-              <label style={styles.checkboxLabel}>
+              <label style={styles.checkboxLabel} className="filter-checkbox-hover">
                 <input
                   type="checkbox"
                   checked={jobType.fullTime}
@@ -249,7 +249,7 @@ const JobsPage = () => {
                 />
                 Full time
               </label>
-              <label style={styles.checkboxLabel}>
+              <label style={styles.checkboxLabel} className="filter-checkbox-hover">
                 <input
                   type="checkbox"
                   checked={jobType.partTime}
@@ -257,7 +257,7 @@ const JobsPage = () => {
                 />
                 Part time
               </label>
-              <label style={styles.checkboxLabel}>
+              <label style={styles.checkboxLabel} className="filter-checkbox-hover">
                 <input
                   type="checkbox"
                   checked={jobType.internship}
@@ -279,6 +279,7 @@ const JobsPage = () => {
                 value={salaryRange[0]}
                 onChange={(e) => handleSalaryRangeChange([parseInt(e.target.value), salaryRange[1]])}
                 style={styles.slider}
+                className="range-slider-accent"
               />
               <input
                 type="range"
@@ -287,6 +288,7 @@ const JobsPage = () => {
                 value={salaryRange[1]}
                 onChange={(e) => handleSalaryRangeChange([salaryRange[0], parseInt(e.target.value)])}
                 style={styles.slider}
+                className="range-slider-accent"
               />
             </div>
             <div style={styles.salaryDisplay}>
@@ -299,7 +301,7 @@ const JobsPage = () => {
           <div style={styles.filterSection}>
             <h3 style={styles.filterTitle}>Experience Level</h3>
             <div style={styles.filterGroup}>
-              <label style={styles.checkboxLabelWithCount}>
+              <label style={styles.checkboxLabelWithCount} className="filter-checkbox-hover">
                 <input
                   type="checkbox"
                   checked={experienceLevel.entryLevel}
@@ -308,7 +310,7 @@ const JobsPage = () => {
                 <span>Entry level</span>
                 <span style={styles.jobCount}>392</span>
               </label>
-              <label style={styles.checkboxLabelWithCount}>
+              <label style={styles.checkboxLabelWithCount} className="filter-checkbox-hover">
                 <input
                   type="checkbox"
                   checked={experienceLevel.intermediate}
@@ -317,7 +319,7 @@ const JobsPage = () => {
                 <span>Intermediate</span>
                 <span style={styles.jobCount}>124</span>
               </label>
-              <label style={styles.checkboxLabelWithCount}>
+              <label style={styles.checkboxLabelWithCount} className="filter-checkbox-hover">
                 <input
                   type="checkbox"
                   checked={experienceLevel.expert}
@@ -332,6 +334,31 @@ const JobsPage = () => {
 
         {/* Main Content */}
         <div style={styles.mainContent}>
+          <style>{`
+            .filter-checkbox-hover:hover {
+              color: #0D9488 !important;
+            }
+            .filter-checkbox-hover input[type="checkbox"] {
+              accent-color: #0D9488;
+            }
+            .range-slider-accent {
+              accent-color: #0D9488;
+            }
+            .clear-all-btn-hover {
+              transition: all 0.25s ease !important;
+            }
+            .clear-all-btn-hover:hover {
+              background: rgba(239, 68, 68, 0.15) !important;
+            }
+            .pagination-btn-hover {
+              transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+            .pagination-btn-hover:hover:not(:disabled) {
+              transform: translateY(-1.5px) !important;
+              box-shadow: 0 6px 18px rgba(13, 148, 136, 0.35) !important;
+              background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%) !important;
+            }
+          `}</style>
           <div style={styles.container}>
             {filteredJobs && filteredJobs.length > 0 ? (
               <>
@@ -345,6 +372,7 @@ const JobsPage = () => {
                         ...styles.paginationBtn,
                         ...(currentPage === 1 ? styles.paginationBtnDisabled : {}),
                       }}
+                      className="pagination-btn-hover"
                     >
                       ← Previous
                     </button>
@@ -360,6 +388,7 @@ const JobsPage = () => {
                         ...styles.paginationBtn,
                         ...(currentPage === totalPages ? styles.paginationBtnDisabled : {}),
                       }}
+                      className="pagination-btn-hover"
                     >
                       Next →
                     </button>
@@ -380,10 +409,10 @@ const JobsPage = () => {
 
 const styles = {
   outerContainer: {
-    padding: "20px",
-    maxWidth: "1400px",
+    padding: "32px 20px",
+    maxWidth: "1280px",
     margin: "0 auto",
-    background: "#FFFFFF",
+    background: "#F8FAFC",
     minHeight: "100vh",
     width: "100%",
     boxSizing: "border-box",
@@ -391,100 +420,107 @@ const styles = {
   headerSection: {
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: "30px",
+    alignItems: "flex-end",
+    marginBottom: "32px",
     gap: "20px",
   },
   pageWrapper: {
     display: "grid",
     gridTemplateColumns: "280px 1fr",
-    gap: "30px",
+    gap: "32px",
     width: "100%",
     boxSizing: "border-box",
     minWidth: 0,
   },
   sidebar: {
-    backgroundColor: "#F5F6F7",
-    padding: "20px",
-    borderRadius: "8px",
+    backgroundColor: "#ffffff",
+    padding: "24px",
+    borderRadius: "16px",
     height: "fit-content",
     position: "sticky",
-    top: "180px",
+    top: "100px",
     minWidth: 0,
-    border: "1px solid #D9DDD4",
+    border: "1.5px solid #E2E8F0",
+    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.02)",
     zIndex: 50,
-    maxHeight: "calc(100vh - 200px)",
+    maxHeight: "calc(100vh - 120px)",
     overflowY: "auto",
   },
   filterSection: {
-    marginBottom: "30px",
-    paddingBottom: "20px",
-    borderBottom: "1px solid #D9DDD4",
+    marginBottom: "28px",
+    paddingBottom: "24px",
+    borderBottom: "1px solid #F3F4F6",
   },
   filterHeader: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "12px",
+    marginBottom: "16px",
   },
   filterTitle: {
     fontSize: "16px",
     fontWeight: "700",
-    color: "#1F3A7D",
+    color: "#111827",
     margin: "0",
   },
   clearAllBtn: {
-    background: "none",
+    background: "rgba(239, 68, 68, 0.1)",
     border: "none",
-    color: "#e74c3c",
+    color: "#EF4444",
     cursor: "pointer",
     fontSize: "12px",
     fontWeight: "600",
-    textDecoration: "underline",
-    padding: "0",
+    padding: "4px 8px",
+    borderRadius: "6px",
+    transition: "background 0.2s",
   },
   filterGroup: {
     display: "flex",
     flexDirection: "column",
-    gap: "10px",
+    gap: "12px",
   },
   checkboxLabel: {
     display: "flex",
     alignItems: "center",
-    gap: "10px",
+    gap: "12px",
     cursor: "pointer",
     fontSize: "14px",
-    color: "#333",
-    padding: "8px 0",
+    color: "#4B5563",
+    padding: "6px 0",
+    transition: "color 0.2s",
   },
   checkboxLabelWithCount: {
     display: "flex",
     alignItems: "center",
-    gap: "10px",
+    gap: "12px",
     cursor: "pointer",
     fontSize: "14px",
-    color: "#333",
+    color: "#4B5563",
     justifyContent: "space-between",
-    padding: "8px 0",
+    padding: "6px 0",
+    transition: "color 0.2s",
   },
   jobCount: {
-    color: "#999",
+    color: "#0D9488",
     fontSize: "12px",
     marginLeft: "auto",
-    fontWeight: "500",
+    fontWeight: "600",
+    background: "rgba(13, 148, 136, 0.08)",
+    padding: "2px 8px",
+    borderRadius: "12px",
   },
   sliderContainer: {
     position: "relative",
     marginBottom: "16px",
     height: "6px",
-    background: "#D9DDD4",
+    background: "#E5E7EB",
     borderRadius: "3px",
   },
   slider: {
     position: "absolute",
     width: "100%",
-    height: "5px",
-    borderRadius: "2px",
+    height: "100%",
+    borderRadius: "3px",
     background: "transparent",
     outline: "none",
     cursor: "pointer",
@@ -495,10 +531,10 @@ const styles = {
   salaryDisplay: {
     display: "flex",
     justifyContent: "space-between",
-    fontSize: "13px",
-    color: "#333",
+    fontSize: "14px",
+    color: "#374151",
     marginTop: "12px",
-    fontWeight: "500",
+    fontWeight: "600",
   },
   mainContent: {
     flex: 1,
@@ -511,97 +547,101 @@ const styles = {
     overflow: "hidden",
   },
   pageTitle: {
-    fontSize: "28px",
-    fontWeight: "700",
-    color: "#1F3A7D",
-    margin: "0 0 10px 0",
+    fontSize: "32px",
+    fontWeight: "800",
+    color: "#111827",
+    margin: "0 0 8px 0",
+    letterSpacing: "-0.02em",
   },
   sortButton: {
-    padding: "10px 20px",
-    background: "#FFFFFF",
-    border: "2px solid #1BA5A5",
-    borderRadius: "8px",
+    padding: "10px 16px",
+    background: "#ffffff",
+    border: "1px solid #E5E7EB",
+    borderRadius: "10px",
     fontSize: "14px",
     fontWeight: "600",
     cursor: "pointer",
-    color: "#1BA5A5",
-    transition: "border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease",
+    color: "#374151",
+    transition: "all 0.2s ease",
     whiteSpace: "nowrap",
     height: "fit-content",
-    boxShadow: "0 2px 8px rgba(27, 165, 165, 0.15)",
+    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
   },
   filterInfo: {
-    fontSize: "14px",
-    color: "#666",
-    margin: "8px 0 0 0",
+    fontSize: "15px",
+    color: "#6B7280",
+    margin: "12px 0 0 0",
     display: "flex",
     alignItems: "center",
     gap: "12px",
   },
   clearBtn: {
-    background: "#e74c3c",
-    color: "white",
+    background: "#FEF2F2",
+    color: "#EF4444",
     border: "none",
-    padding: "6px 12px",
-    borderRadius: "4px",
+    padding: "6px 14px",
+    borderRadius: "8px",
     cursor: "pointer",
-    fontSize: "12px",
-    fontWeight: "500",
-    transition: "background 0.3s ease",
+    fontSize: "13px",
+    fontWeight: "600",
+    transition: "all 0.2s ease",
   },
   loadingText: {
     fontSize: "18px",
-    color: "#666",
+    color: "#6B7280",
     textAlign: "center",
+    padding: "40px",
+    fontWeight: "500",
   },
   errorText: {
     fontSize: "16px",
-    color: "#e74c3c",
+    color: "#EF4444",
+    textAlign: "center",
+    padding: "40px",
   },
   noJobsText: {
     fontSize: "16px",
-    color: "#95a5a6",
+    color: "#9CA3AF",
     textAlign: "center",
-    padding: "40px",
+    padding: "60px 40px",
+    background: "#ffffff",
+    borderRadius: "16px",
+    border: "1px dashed #E5E7EB",
   },
   pagination: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "20px",
-    padding: "30px 20px",
-    marginTop: "40px",
-    borderTop: "1px solid #D9DDD4",
+    gap: "24px",
+    padding: "40px 20px",
+    marginTop: "32px",
+    borderTop: "1px solid #E5E7EB",
   },
   paginationBtn: {
-    padding: "10px 20px",
-    background: "linear-gradient(135deg, #1BA5A5 0%, #0D7A86 100%)",
+    padding: "12px 24px",
+    background: "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)",
     color: "white",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "10px",
     cursor: "pointer",
-    fontSize: "14px",
+    fontSize: "15px",
     fontWeight: "600",
-    transition: "box-shadow 0.3s ease, transform 0.2s ease",
-    boxShadow: "0 4px 12px rgba(27, 165, 165, 0.3)",
-    ":hover": {
-      boxShadow: "0 6px 16px rgba(27, 165, 165, 0.4)",
-      transform: "translateY(-2px)",
-    },
+    transition: "all 0.2s ease",
+    boxShadow: "0 4px 12px rgba(13, 148, 136, 0.2)",
   },
   paginationBtnDisabled: {
-    background: "#ccc",
-    color: "#999",
+    background: "#E5E7EB",
+    color: "#9CA3AF",
     cursor: "not-allowed",
-    ":hover": {
-      background: "#ccc",
-      transform: "none",
-    },
+    boxShadow: "none",
   },
   pageInfo: {
     fontSize: "15px",
-    color: "#333",
-    fontWeight: "500",
+    color: "#4B5563",
+    fontWeight: "600",
     minWidth: "150px",
     textAlign: "center",
   },
