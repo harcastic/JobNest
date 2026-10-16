@@ -35,3 +35,14 @@ export const deleteApplicationByJob = async (jobId) => {
   const res = await api.delete(`/applications/job/${jobId}`);
   return res.data;
 };
+
+export const parseResumeWithAI = async (resumeFile) => {
+  const formData = new FormData();
+  formData.append("resume", resumeFile);
+  const res = await api.post("/applications/parse-resume", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};

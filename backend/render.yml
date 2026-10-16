@@ -29,3 +29,9 @@ services:
       # 🗄️ Database
       - key: CONNECTION_STRING
         sync: false
+
+      # 🤖 AI / LLM APIs (RAG Auto-Fill)
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false

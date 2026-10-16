@@ -17,7 +17,11 @@ import deleteJobApplication from '../controllers/deleteAppByJob.js';
 import updateApplicationStatus from '../controllers/updateAppStatus.js';
 import updateMyApplication from '../controllers/updateMyApplication.js';
 import uploadResume from '../../../middlewares/uploadResumeMidddleware.js';
+import uploadResumeMemory from '../../../middlewares/memoryPdfUploadMiddleware.js';
+import parseResume from '../controllers/parseResume.js';
 
+// RESUME RAG PARSING ROUTE
+router.post('/parse-resume', validateToken, authorizeRoles("user"), uploadResumeMemory, parseResume);
 
 // VIEW APP ROUTE-USER
 router.get('/my-applications', validateToken, authorizeRoles("user"), getMyApplication);
